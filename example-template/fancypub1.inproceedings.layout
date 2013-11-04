@@ -1,0 +1,4 @@
+<p>
+<span class="bibauthor">\author</span>: 
+<span class="bibtitle">\title</span> (<span class="bibvenue">\booktitle</span>, <span class="bibyear">\year</span>) <span class="abstractlink" onClick="abstractclick('\bibtexkey');">abstract</span> <a href="http://herakles.inf-cv.uni-jena.de/biborb/bibs/cv/papers/\bibtexkey.pdf"><span class="pdflink">pdf</span></a>
+<div class="bibabstract" id="\bibtexkey">Abstract: \abstract</div>
