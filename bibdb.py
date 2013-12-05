@@ -1,3 +1,4 @@
+# coding=utf-8
 import re
 
 class bibdb:
@@ -30,7 +31,12 @@ class bibdb:
                     continue
                 if re.match('^\s*$', s):
                     continue
-                data += (s + ' ')
+                    
+                s = re.sub( r'\{?\\"o\}?', 'ö', s )
+                s = re.sub( r'\{?\\"u\}?', 'ü', s )
+                s = re.sub( r'\{?\\"a\}?', 'ä', s )
+                data += unicode(s + ' ', "utf8")
+
 
             # Split the data at the separators @ and put it in a list
             biblist = data.split('@')

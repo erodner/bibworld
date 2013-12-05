@@ -7,18 +7,14 @@ from pprint import pprint
 def printfile ( outf, fn ):
     with open(fn, 'r') as f:
         for line in f:
-            outf.write(line) 
+            outf.write(line.encode('utf8')) 
 
 def printtemplate ( outf, p, fn ):
     with open(fn, 'r') as f:
         for line in f:
             for k in p.keys():
                 line = re.sub( r'\\%s' % (k), p[k], line )
-            line = re.sub( r'\{?\\"o\}?', 'ö', line )
-            line = re.sub( r'\{?\\"u\}?', 'ü', line )
-            line = re.sub( r'\{?\\"a\}?', 'ä', line )
-
-            outf.write(line) 
+            outf.write(line.encode('utf8')) 
 
 
 def bib2html(refs, outfn, templatedir, templatename):

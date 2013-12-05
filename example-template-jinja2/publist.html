@@ -1,0 +1,23 @@
+<meta charset="utf-8"> 
+<html>
+<head>
+<title>Publications</title>
+<link href="bib.css" rel="stylesheet" type="text/css">
+<script src="bib.js"></script>
+</head>
+<body>
+
+{% for item in refs.values() %}
+<p>
+    {% if item.type=='inproceedings' %}
+<span class=bibauthor>{{ item.author }}</span>: <span class=bibtitle>{{ item.title }}</span> (<span class=bibvenue>{{ item.booktitle }}</span>, <span class=bibyear>{{ item.year }}</span>)
+    {% elif item.type=='article' %}
+<span class=bibauthor>{{ item.author }}</span>: <span class=bibtitle>{{ item.title }}</span> (<span class=bibvenue>{{ item.journal }}</span>, <span class=bibyear>{{ item.year }}</span>)
+    {% else %}
+<span class=bibauthor>{{ item.author }}</span>: <span class=bibtitle>{{ item.title }}</span> (<span class=bibyear>{{ item.year }}</span>)
+    {% endif %}
+{% endfor %}
+
+</body>
+
+</html>

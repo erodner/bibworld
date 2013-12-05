@@ -3,7 +3,8 @@ import os
 import argparse
 from bibdb import bibdb
 from pprint import pprint
-import jabreftemplate
+import tengjabref
+import tengjinja2
 import re
 
 # add a git extension to fapuli
@@ -14,6 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-b', help='Source Bibtex file', required=True)
 parser.add_argument('-t', help='HTML template file', required=True)
 parser.add_argument('-o', help='HTML output', default='out.html')
+parser.add_argument('--engine', help='Template engine being used', default='jabref')
 args = parser.parse_args()
 
 bibfile = args.b
@@ -34,4 +36,7 @@ print "Number of publications: ", len(refs)
 #pprint(refs)
 
 print "Writing HTML output to", outfn
-jabreftemplate.bib2html( refs, outfn, templatedir, templatename )
+if args.engine=='jabref':
+    tengjabref.bib2html( refs, outfn, templatedir, templatename )
+else:
+    tengjinja2.bib2html( refs, outfn, templatedir, templatename )
