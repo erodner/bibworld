@@ -8,12 +8,36 @@ class bibdb:
     def __init__(self):
         print "Initialize bibdb"
 
-    def getReferences (self):
-        return self.reflist
+    def matchEntry ( self, sdicts, p ):
+        for key in sdicts: 
+            if not key in p:
+                return False
+            value = p[key]
+            pattern = sdicts[key]
+            if not re.search(pattern, value):
+                return False
+        return True
+ 
 
+    """ get references (possibly filtered) """
+    def getReferences (self, **kwargs):
+        # now filter references according to 
+        # the keyword arguments
+        refs = {}
+        for k in self.reflist.keys():
+            p = self.reflist[k]
+            if self.matchEntry( kwargs, p ): 
+                # add the entry to the filter result list
+                refs[k] = p
+
+        return refs
+
+
+
+    """ read bibtex entries from a file """
     def readFromBibTex(self, bibfile):
         # The following code is a modified version of 
-        # bibtex2html @ github (by Gustavo de Oliverira
+        # bibtex2html @ github (by Gustavo de Oliverira)
 
         print "Reading references from: ", bibfile
 
