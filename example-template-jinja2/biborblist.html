@@ -1,0 +1,25 @@
+<meta charset="utf-8"> 
+<html>
+<head>
+<title>Publications</title>
+<link href="{{ url_for('static', filename='biborb.css') }}" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+
+{% for item in refs.values() %}
+    <p>
+    {% if item.type=='inproceedings' %}
+<span class=bibauthor>{{ item.author }}.</span>: <span class=bibtitle>{{ item.title }}.</span><span class=bibvenue>{{ item.booktitle }}.</span><span class=bibyear>{{ item.year }}.</span>
+    {% elif item.type=='article' %}
+<span class=bibauthor>{{ item.author }}.</span>: <span class=bibtitle>{{ item.title }}.</span><span class=bibvenue>{{ item.journal }}.</span><span class=bibyear>{{ item.year }}.</span>
+    {% else %}
+<span class=bibauthor>{{ item.author }}</span>: <span class=bibtitle>{{ item.title }}</span> (<span class=bibyear>{{ item.year }}</span>)
+    {% endif %}
+    <a href="/bib/{{ item.id }}" onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
+    <img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf" title="pdf"/>
+{% endfor %}
+
+</body>
+
+</html>

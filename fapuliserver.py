@@ -17,6 +17,9 @@ args = parser.parse_args()
 bibfile = args.b
 defaulttemplate = args.t
 
+# fixed settings
+exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year'}
+
 # server initialization
 def init():
     mybib = bibdb()
@@ -62,6 +65,11 @@ def print_year(year, template=None):
         template = defaulttemplate
     return flask.render_template(template, refs=refs)
 
+@app.route('/bib/<bibid>')
+def print_bibtex(bibid):
+    mybib = cache.get('mybib')
+    return mybib.getBibtexEntry( bibid, newlinestr='<br>', exported_keys=exported_bibkeys )
+    
 
 #############################################################
 

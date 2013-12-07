@@ -32,7 +32,20 @@ class bibdb:
 
         return refs
 
-
+    def getBibtexEntry ( self, key, exported_keys=None, newlinestr="\n" ):
+        if not key in self.reflist:
+            return ""
+        else:
+            entry = ""
+            p = self.reflist[key]
+            entry = entry + "@%s{%s%s" % ( p['type'], p['id'], newlinestr )
+            for k in p.keys():
+                if exported_keys and not k in exported_keys:
+                    continue
+                else:
+                    entry = entry + "  %s = {%s}%s" % ( k, p[k], newlinestr )
+            entry = entry +  "}%s" % (newlinestr)
+            return entry
 
     """ read bibtex entries from a file """
     def readFromBibTex(self, bibfile):
