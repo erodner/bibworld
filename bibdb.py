@@ -1,5 +1,6 @@
 # coding=utf-8
 import re
+import os
 
 class bibdb:
   
@@ -17,7 +18,10 @@ class bibdb:
             if not re.search(pattern, value):
                 return False
         return True
- 
+
+    """ get single reference """
+    def getReference (self, k):
+        return self.reflist[k]
 
     """ get references (possibly filtered) """
     def getReferences (self, **kwargs):
@@ -31,6 +35,16 @@ class bibdb:
                 refs[k] = p
 
         return refs
+
+    """ check available pdfs from a directory """
+    def addPDFs (self, pdfdirectory, verbose=True):
+        for k in self.reflist.keys():
+            fname = "%s.pdf" % (os.path.join( pdfdirectory, k ))
+            if os.path.isfile( fname ):
+                print "Adding pdf document: %s" % ( fname )
+                self.reflist[k]['pdf'] = fname
+
+
     """ get a single BibTex entry and restrict the export fields """
     def getBibtexEntry ( self, key, exported_keys=None, newlinestr="\n" ):
         if not key in self.reflist:
