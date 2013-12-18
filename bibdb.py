@@ -31,7 +31,7 @@ class bibdb:
                 refs[k] = p
 
         return refs
-
+    """ get a single BibTex entry and restrict the export fields """
     def getBibtexEntry ( self, key, exported_keys=None, newlinestr="\n" ):
         if not key in self.reflist:
             return ""
@@ -51,6 +51,8 @@ class bibdb:
     def readFromBibTex(self, bibfile):
         # The following code is a modified version of 
         # bibtex2html @ github (by Gustavo de Oliverira)
+
+        metabibkeys = {'jabref-meta'}
 
         print "Reading references from: ", bibfile
 
@@ -127,8 +129,14 @@ class bibdb:
                 else:
                     print "No BibTex ID given or error during parsing"
 
-
-                self.reflist[bibid] = keydict
+                #print "Adding %s" % (bibid)
+                rejected = False
+                for mbib in metabibkeys:
+                    if re.search( mbib, bibid ):
+                        rejected = True
+                        break
+                if not rejected:
+                    self.reflist[bibid] = keydict
 
 
                  
