@@ -37,7 +37,8 @@ init()
 app = Flask(__name__, template_folder=args.htmlroot, static_folder=args.htmlroot)
 
 
-@app.route('/<template>')
+@app.route('/all/<template>')
+@app.route('/all/')
 @app.route('/')
 def start(template=None):
     mybib = cache.get('mybib')
