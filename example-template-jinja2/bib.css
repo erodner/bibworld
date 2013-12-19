@@ -1,8 +1,11 @@
-    .bibtitle { font-weight: bold; color: blue; }
-    .bibauthor { font-style: italic;  }
-    .bibvenue { font-style: normal; }
-    .bibyear { font-style: italic; }
-    .bibabstract { display: none; }
-    .abstractlink { font-style: italic; color: blue }
+    .bibtitle { font-weight: normal; color: blue; padding:2px }
+    .bibauthor { font-style: italic; padding: 2px }
+    .bibvenue { font-style: bold; padding:2px }
+    .bibyear { font-style: italic; padding:2px }
+    .bibabstract { display: none; color:rgba(0,0,0,1); margin-top:10px; font-style:italic }
+    .abstractlink { font-style: italic; color: blue; border-color: black }
     .pdflink { font-style: italic; color: blue }
-
+    .vspace { margin-top:0.5em }
+    .block blockquote{border-color:#ddd;border-color:rgba(0,0,0,0.15)}
+    .paperblock{border: 1px solid silver;padding:9px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px; background-color:rgba(0,0,0,0.08); clear:both; overflow:hidden; vertical-align:middle}
+    .teaserimg{float:left; padding: 10px}

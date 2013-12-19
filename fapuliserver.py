@@ -1,6 +1,6 @@
 # Documentation of flask at http://flask.pocoo.org/docs/flask-docs.pdf
 import flask
-from flask import Flask, make_response, abort
+from flask import Flask, make_response, abort, send_file
 from bibdb import bibdb
 import argparse
 
@@ -28,6 +28,7 @@ def init():
     mybib = bibdb()
     mybib.readFromBibTex ( bibfile )
     mybib.addPDFs ( pdfdir )
+    mybib.addTeaserImages ( pdfdir )
 
     # add the references to the cache
     cache.set('mybib', mybib)
@@ -81,6 +82,16 @@ def print_bibtex(bibid):
     mybib = cache.get('mybib')
     return mybib.getBibtexEntry( bibid, newlinestr='<br>', exported_keys=exported_bibkeys )
  
+@app.route('/teaser/<bibid>')
+def print_teaserimage(bibid):
+    mybib = cache.get('mybib')
+    ref = mybib.getReference(bibid) 
+    if 'teaser' in ref:
+        return send_file( ref['teaser'] )
+    else:
+        print abort(404)
+
+
 @app.route('/pdf/<bibid>')
 def print_pdf(bibid):
     mybib = cache.get('mybib')

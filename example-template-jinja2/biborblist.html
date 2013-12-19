@@ -2,19 +2,28 @@
 <html>
 <head>
 <title>Publications</title>
-<link href="{{ url_for('static', filename='biborb.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='bib.css') }}" rel="stylesheet" type="text/css">
+<script src="{{ url_for('static', filename='bib.js') }}"></script>
 </head>
 <body>
 
 
+<div class='block' >
 {% for group in refs.values()|groupby(attribute='year')|reverse %}
     <h2>{{ group.grouper }}</h2>
-    {% for item in group.list|sort(attribute='year',reverse=True) %}
-        <p>
+    {% for item in group.list %}
+        <div class='paperblock' >
+        {% if item.teaser %}
+          <img width=100px class=teaserimg src="/teaser/{{ item.id }}">
+        {% endif %}
+
+        <div style='vertical-align:middle'>
         {% if item.type=='inproceedings' %}
-    <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}.</span><span class=bibvenue>{{ item.booktitle }}.</span><span class=bibyear>{{ item.year }}.</span>
+          <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}.</span><br />
+          <span class=bibvenue>{{ item.booktitle }}.</span><span class=bibyear>{{ item.year }}.</span>
         {% elif item.type=='article' %}
-    <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}.</span><span class=bibvenue>{{ item.journal }}.</span><span class=bibyear>{{ item.year }}.</span>
+    <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}.</span><br />
+    <span class=bibvenue>{{ item.journal }}.</span><span class=bibyear>{{ item.year }}.</span>
         {% else %}
     <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}</span> (<span class=bibyear>{{ item.year }}</span>)
         {% endif %}
@@ -22,8 +31,22 @@
         {% if item.pdf %}
         <a href="/pdf/{{ item.id }}"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf" title="pdf"/></a>
         {% endif %}
+
+        {% if item.abstract %}
+        <span class="abstractlink" onClick="abstractclick('{{ item.id }}');">more ...</span>
+        <div class="bibabstract" id="{{ item.id }}">
+          <br />
+          <div class='vspace'></div>
+          Abstract: {{ item.abstract }}
+          {% endif %}
+        </div>
+        </div>
+
+        </div>
+        <div class='vspace'></div>
     {% endfor %}
 {% endfor %}
+</div>
 
 </body>
 

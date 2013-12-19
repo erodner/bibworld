@@ -36,6 +36,14 @@ class bibdb:
 
         return refs
 
+    """ check available teaser images from a directory """
+    def addTeaserImages (self, teaserdirectory, verbose=True):
+        for k in self.reflist.keys():
+            fname = "%s.pdf.teaser.png" % (os.path.join( teaserdirectory, k ))
+            if os.path.isfile( fname ):
+                print "Adding teaser image: %s" % ( fname )
+                self.reflist[k]['teaser'] = fname
+
     """ check available pdfs from a directory """
     def addPDFs (self, pdfdirectory, verbose=True):
         for k in self.reflist.keys():
@@ -78,17 +86,24 @@ class bibdb:
 
 
             # Convert a list into a string
-            data = ''
+            data = u''
             for s in datalist: 
                 if re.match('^\s*%', s): 
                     continue
                 if re.match('^\s*$', s):
                     continue
-                    
-                s = re.sub( r'\{?\\"o\}?', 'ö', s )
-                s = re.sub( r'\{?\\"u\}?', 'ü', s )
-                s = re.sub( r'\{?\\"a\}?', 'ä', s )
-                data += unicode(s + ' ', "utf8")
+ 
+                try:
+                  s = unicode(s + ' ', errors='ignore')
+                except UnicodeDecodeError, e:
+                  print s
+
+                s = re.sub( r'\{?\\"o\}?', u'ö', s )
+                s = re.sub( r'\{?\\"u\}?', u'ü', s )
+                s = re.sub( r'\{?\\"a\}?', u'ä', s )
+                s = re.sub( r'\{?\\ss\}?', u'ß', s )
+                
+                data += s + u' '
 
 
             # Split the data at the separators @ and put it in a list
@@ -145,10 +160,18 @@ class bibdb:
 
                 #print "Adding %s" % (bibid)
                 rejected = False
-                for mbib in metabibkeys:
-                    if re.search( mbib, bibid ):
-                        rejected = True
-                        break
+
+                if not rejected:
+                   if not 'year' in keydict:
+                      print "BibTex entry %s has no year specified and will therefore be ignored!" % (bibid)
+                      rejected = True
+
+                if not rejected:
+                    for mbib in metabibkeys:
+                        if re.search( mbib, bibid ):
+                            rejected = True
+                            break
+
                 if not rejected:
                     self.reflist[bibid] = keydict
 
