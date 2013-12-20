@@ -97,13 +97,7 @@ def print_pdf(bibid):
     mybib = cache.get('mybib')
     ref = mybib.getReference(bibid) 
     if 'pdf' in ref:
-        print "Downloading PDF file"
-        def generate():
-            yield 'test'
-
-        response = make_response(generate)
-        response.headers["Content-Disposition"] = "attachment; filename=%s.pdf" % (bibid)
-        return response
+        return send_file( ref['pdf'] )
     else:
         print abort(404)
 

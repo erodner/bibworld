@@ -13,11 +13,14 @@
     <h2>{{ group.grouper }}</h2>
     {% for item in group.list %}
         <div class='paperblock' >
+        <table>
+        <td width=80px>
         {% if item.teaser %}
-          <img width=100px class=teaserimg src="/teaser/{{ item.id }}">
+          <img width=70px class=teaserimg src="/teaser/{{ item.id }}">
         {% endif %}
-
-        <div style='vertical-align:middle'>
+        </td>
+     
+        <td style='vertical-align:middle'>
         {% if item.type=='inproceedings' %}
           <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}.</span><br />
           <span class=bibvenue>{{ item.booktitle }}.</span><span class=bibyear>{{ item.year }}.</span>
@@ -40,7 +43,8 @@
           Abstract: {{ item.abstract }}
           {% endif %}
         </div>
-        </div>
+        </td>
+        </table>
 
         </div>
         <div class='vspace'></div>
