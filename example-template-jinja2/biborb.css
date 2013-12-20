@@ -1,0 +1,67 @@
+/**
+ *
+ * This file is part of BibORB
+ * 
+ * Copyright (C) 2003  Guillaume Gardey
+ * 
+ * BibORB is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * BibORB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ */
+ 
+/**
+ * 
+ * File: bibtex_simple_html_look.css
+ * Author: Guillaume Gardey (ggardey@club-internet.fr)
+ * Year: 2003
+ * Licence: GPL
+ * 
+ * Description:
+ * 
+ *      The artist's playground. :) 
+ *      This file defines the look of entries exported to HTML.
+ * 
+ */
+
+
+/**
+ * Style for the simple output
+ */
+
+.bibtex_simple dt {
+    font-family:monospace;
+}
+
+.bibtex_simple a, .bibtex_simple a:hover, .bibtex_simple a:visited, .bibtex_simple a:focus {
+    text-decoration:none;
+}
+
+.bibid {
+    display:inline;
+    padding-bottom:1em;
+}
+
+.bibauthor, .bibeditor, .bibpublisher {
+    padding-right:0.5em;
+    font-style:italic;
+}
+
+.bibtitle {
+    padding-right:0.5em;
+    font-weight:bold;
+}
+
+.bibvenue, .bibyear, .bibschool, .bibinstitution, .bibnote, .bibpages {
+    padding-right:0.5em;
+}
