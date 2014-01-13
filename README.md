@@ -1,4 +1,5 @@
-#Bibworld - easy publication lists with flask#
+Bibworld - easy publication lists with flask
+--------------------------------------------
 
 Bibworld is a tool to create HTML publications lists from bibtex files and directories with corresponding PDFs and teaser images.
 
