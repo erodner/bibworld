@@ -4,6 +4,7 @@ from flask import Flask, make_response, abort, send_file
 from bibdb import bibdb
 import argparse
 import os
+import subprocess
 
 # initialize cache 
 from werkzeug.contrib.cache import SimpleCache
@@ -113,19 +114,29 @@ def refresh():
     try:
         g = git.cmd.Git( gitdir )
         gitmsg = g.pull('origin', 'master')
-    except git.GitCommandError:
+    except git.GitCommandError, e:
         print "Error updating git repo at %s" % (gitdir)
-        pass
+    	gitmsg = "Exception: %s" % (e)
+
+ 
+    #    bashCommand = "export HOME=/usr/local/virtualenvs/bibworld/fakehome/; cd %s; git pull origin master" % (gitdir)
+    #	 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    # 	 gitmsg = process.communicate()[0]
+   
+    # try:	 
+    #	gitmsg = subprocess.check_output(['git', '--git-dir', gitdir, 'pull', 'origin', 'master'], shell=True)
+    # except Exception, e:
+    #	print e
+    #	gitmsg = "Exception: %s" % (e)
+
+    print "gitmsg: %s" % (gitmsg)
 
     # reread everything
     init()   
 
-    return gitmsg
-    
-    #flask.redirect('/')
+    return flask.redirect('/')
 
 #############################################################
 
 if __name__ == '__main__':
     app.run(debug=True)
- 
