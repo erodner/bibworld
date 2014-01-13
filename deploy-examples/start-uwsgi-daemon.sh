@@ -1,3 +1,6 @@
 #!/bin/sh
 cd ../../
-bin/uwsgi -x fapuli/deploy-examples/uwsgi.xml
+killall uwsgi
+bin/uwsgi  -x fapuli/deploy-examples/uwsgi.xml
+sleep 3
+ps aux | grep uwsgi

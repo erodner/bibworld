@@ -11,7 +11,7 @@ cache = SimpleCache()
 
 # parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('-b', help='Source Bibtex file', default='/home/rodner/bib/paper.bib')
+parser.add_argument('-b', help='Source Bibtex file', default='/usr/local/virtualenvs/bibworld/bib/paper.bib')
 parser.add_argument('--htmlroot', help='Template folder', default='example-template-jinja2')
 parser.add_argument('-t', help='Default template', default='biborblist.html')
 parser.add_argument('-p', help='PDF directory', default='/home/dbv/publications/')
@@ -123,7 +123,7 @@ def refresh():
 #############################################################
 
 # switch debug on in general
-app.run(debug=True)
+app.debug = True
 
 if __name__ == '__main__':
     app.run(debug=True)
