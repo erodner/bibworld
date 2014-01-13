@@ -3,6 +3,7 @@ import flask
 from flask import Flask, make_response, abort, send_file
 from bibdb import bibdb
 import argparse
+import os
 
 # initialize cache 
 from werkzeug.contrib.cache import SimpleCache
@@ -100,6 +101,24 @@ def print_pdf(bibid):
         return send_file( ref['pdf'] )
     else:
         print abort(404)
+
+@app.route('/refresh')
+def refresh():
+    # try to perform a git update before the refresh
+    gitdir = os.path.dirname( bibfile )
+
+    import git
+    try:
+        g = git.cmd.Git( gitdir )
+        g.pull('origin', 'master')
+    except git.GitCommandError:
+        print "Error updating git repo at %s" % (gitdir)
+        pass
+
+    # reread everything
+    init()   
+
+    return flask.redirect('/')
 
 #############################################################
 
