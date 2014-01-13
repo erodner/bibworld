@@ -107,10 +107,12 @@ def refresh():
     # try to perform a git update before the refresh
     gitdir = os.path.dirname( bibfile )
 
+    gitmsg = ''
+
     import git
     try:
         g = git.cmd.Git( gitdir )
-        g.pull('origin', 'master')
+        gitmsg = g.pull('origin', 'master')
     except git.GitCommandError:
         print "Error updating git repo at %s" % (gitdir)
         pass
@@ -118,7 +120,9 @@ def refresh():
     # reread everything
     init()   
 
-    return flask.redirect('/')
+    return gitmsg
+    
+    #flask.redirect('/')
 
 #############################################################
 
