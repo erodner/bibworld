@@ -3,7 +3,7 @@
     .bibvenue { font-style: bold; padding:2px }
     .bibyear { font-style: italic; padding:2px }
     .bibabstract { display: none; color:rgba(0,0,0,1); margin-top:8px; font-style:italic }
-    .abstractlink { font-style: italic; color: blue; border-color: black }
+    .abstractlink { font-style: italic; color: blue; border-color: black; text-decoration: underline }
     .pdflink { font-style: italic; color: blue }
     .vspace { margin-top:0.3em }
     .block blockquote{border-color:#ddd;border-color:rgba(0,0,0,0.15)}
