@@ -22,13 +22,28 @@
      
         <td style='vertical-align:middle'>
         {% if item.type=='inproceedings' %}
-          <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}.</span><br />
+          <span class=bibauthor>{{ item.author }}.</span>
+          {% if item.pdf %}
+          <a href="/pdf/{{ item.id }}">
+          {% endif %}
+          <span class=bibtitle>{{ item.title }}.</span>
+          {% if item.pdf %}
+          </a>
+          {% endif %}
+          <br />
           <span class=bibvenue>{{ item.booktitle }}.</span><span class=bibyear>{{ item.year }}.</span>
         {% elif item.type=='article' %}
-    <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}.</span><br />
-    <span class=bibvenue>{{ item.journal }}.</span><span class=bibyear>{{ item.year }}.</span>
+          <span class=bibauthor>{{ item.author }}.</span>
+          {% if item.pdf %}
+          <a href="/pdf/{{ item.id }}">
+          {% endif %}
+          <span class=bibtitle>{{ item.title }}.</span>
+          {% if item.pdf %}
+          </a>
+          {% endif %}
+          <span class=bibvenue>{{ item.journal }}.</span><span class=bibyear>{{ item.year }}.</span>
         {% else %}
-    <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}</span> (<span class=bibyear>{{ item.year }}</span>)
+          <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}</span> (<span class=bibyear>{{ item.year }}</span>)
         {% endif %}
         <a href="/bib/{{ item.id }}" onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
         {% if item.pdf %}
