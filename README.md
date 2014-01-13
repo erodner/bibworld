@@ -29,6 +29,7 @@ Further features:
 * Publications of single years: `http://yourwebserverurl/year/2013`
 * Teaser images: `http://yourwebserverurl/teaser/Rodner09:LFE`
 * PDF documents: `http://yourwebserverurl/pdf/Rodner09:LFE`
+* Refresh database: `http://yourwebserverurl/pdf/Rodner09:LFE` (this feature is still experiment and requires a bibtex file directly in the top level of a git repo)
 * Plain BibTeX entries: `http://yourwebserverurl/bib/Rodner09:LFE` (only a certain subset of the keys will be exported as specified in the source code: `exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year'}`
 
 Templates
