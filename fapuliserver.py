@@ -107,7 +107,7 @@ def refresh():
     # try to perform a git update before the refresh
     gitdir = os.path.dirname( bibfile )
 
-    gitmsg = ''
+    gitmsg = 'No git installed or git error. Updating locally only from %s/%s.' % (bibfile, gitdir)
 
     import git
     try:
