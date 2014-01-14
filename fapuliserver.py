@@ -33,7 +33,7 @@ def init():
     mybib.addTeaserImages ( pdfdir )
 
     # add the references to the cache
-    cache.set('mybib', mybib)
+    cache.set('mybib', mybib, timeout=60*20)
     print "Number of publications: ", len(mybib.getReferences())
 
 
@@ -55,6 +55,10 @@ app = Flask(__name__, template_folder=args.htmlroot, static_folder=args.htmlroot
 @app.route('/')
 def start(template=None):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     refs = mybib.getReferences()
     if not template:
         template = defaulttemplate
@@ -64,6 +68,10 @@ def start(template=None):
 @app.route('/author/<author>/<template>')
 def print_author(author, template=None):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     refs = mybib.getReferences(author=author)
     if not template:
         template = defaulttemplate
@@ -74,6 +82,10 @@ def print_author(author, template=None):
 @app.route('/year/<year>/<template>')
 def print_year(year, template=None):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     refs = mybib.getReferences(year=year)
     if not template:
         template = defaulttemplate
@@ -82,11 +94,19 @@ def print_year(year, template=None):
 @app.route('/bib/<bibid>')
 def print_bibtex(bibid):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     return mybib.getBibtexEntry( bibid, newlinestr='<br>', exported_keys=exported_bibkeys )
  
 @app.route('/teaser/<bibid>')
 def print_teaserimage(bibid):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     ref = mybib.getReference(bibid) 
     if 'teaser' in ref:
         return send_file( ref['teaser'] )
@@ -97,6 +117,10 @@ def print_teaserimage(bibid):
 @app.route('/pdf/<bibid>')
 def print_pdf(bibid):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     ref = mybib.getReference(bibid) 
     if 'pdf' in ref:
         return send_file( ref['pdf'] )
