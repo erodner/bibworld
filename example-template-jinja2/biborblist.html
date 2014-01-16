@@ -33,7 +33,7 @@
           <br />
           <span class=bibvenue>{{ item.booktitle }}.</span>
           {% if item.pages %}
-          <span class=bibpages>{{ item.pages }}.</span>
+          <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
           {% endif %}
           <span class=bibyear>{{ item.year }}.</span>
         {% elif item.type=='article' %}
@@ -47,7 +47,7 @@
           {% endif %}
           <span class=bibvenue>{{ item.journal }}.</span>
           {% if item.pages %}
-          <span class=bibpages>{{ item.pages }}.</span>
+          <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
           {% endif %}
           <span class=bibyear>{{ item.year }}.</span>
         {% else %}

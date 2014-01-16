@@ -65,7 +65,7 @@ class bibdb:
                 if exported_keys and not k in exported_keys:
                     continue
                 else:
-                    entry = entry + "  %s = {%s}%s" % ( k, p[k], newlinestr )
+                    entry = entry + "  %s = {%s},%s" % ( k, p[k], newlinestr )
             entry = entry +  "}%s" % (newlinestr)
             return entry
 
