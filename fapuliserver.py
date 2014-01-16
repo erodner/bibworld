@@ -3,6 +3,8 @@ import flask
 from flask import Flask, make_response, abort, send_file
 from bibdb import bibdb
 import argparse
+import os
+import subprocess
 
 # initialize cache 
 from werkzeug.contrib.cache import SimpleCache
@@ -10,10 +12,10 @@ cache = SimpleCache()
 
 # parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('-b', help='Source Bibtex file', required=True)
+parser.add_argument('-b', help='Source Bibtex file', default='/usr/local/virtualenvs/bibworld/bib/paper.bib')
 parser.add_argument('--htmlroot', help='Template folder', default='example-template-jinja2')
-parser.add_argument('-t', help='Default template', default='publist.html')
-parser.add_argument('-p', help='PDF directory', default='.')
+parser.add_argument('-t', help='Default template', default='biborblist.html')
+parser.add_argument('-p', help='PDF directory', default='/home/dbv/publications/')
 args = parser.parse_args()
 bibfile = args.b
 pdfdir = args.p
@@ -31,7 +33,7 @@ def init():
     mybib.addTeaserImages ( pdfdir )
 
     # add the references to the cache
-    cache.set('mybib', mybib)
+    cache.set('mybib', mybib, timeout=60*20)
     print "Number of publications: ", len(mybib.getReferences())
 
 
@@ -53,6 +55,10 @@ app = Flask(__name__, template_folder=args.htmlroot, static_folder=args.htmlroot
 @app.route('/')
 def start(template=None):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     refs = mybib.getReferences()
     if not template:
         template = defaulttemplate
@@ -62,6 +68,10 @@ def start(template=None):
 @app.route('/author/<author>/<template>')
 def print_author(author, template=None):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     refs = mybib.getReferences(author=author)
     if not template:
         template = defaulttemplate
@@ -72,6 +82,10 @@ def print_author(author, template=None):
 @app.route('/year/<year>/<template>')
 def print_year(year, template=None):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     refs = mybib.getReferences(year=year)
     if not template:
         template = defaulttemplate
@@ -80,11 +94,19 @@ def print_year(year, template=None):
 @app.route('/bib/<bibid>')
 def print_bibtex(bibid):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     return mybib.getBibtexEntry( bibid, newlinestr='<br>', exported_keys=exported_bibkeys )
  
 @app.route('/teaser/<bibid>')
 def print_teaserimage(bibid):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     ref = mybib.getReference(bibid) 
     if 'teaser' in ref:
         return send_file( ref['teaser'] )
@@ -95,21 +117,50 @@ def print_teaserimage(bibid):
 @app.route('/pdf/<bibid>')
 def print_pdf(bibid):
     mybib = cache.get('mybib')
+    if mybib is None:
+	init()
+	mybib = cache.get('mybib')
+
     ref = mybib.getReference(bibid) 
     if 'pdf' in ref:
-        print "Downloading PDF file"
-        def generate():
-            yield 'test'
-
-        response = make_response(generate)
-        response.headers["Content-Disposition"] = "attachment; filename=%s.pdf" % (bibid)
-        return response
+        return send_file( ref['pdf'] )
     else:
         print abort(404)
 
-#############################################################
+@app.route('/refresh')
+def refresh():
+    # try to perform a git update before the refresh
+    gitdir = os.path.dirname( bibfile )
 
+    gitmsg = 'No git installed or git error. Updating locally only from %s/%s.' % (bibfile, gitdir)
+
+    import git
+    try:
+        g = git.cmd.Git( gitdir )
+        gitmsg = g.pull('origin', 'master')
+    except git.GitCommandError, e:
+        print "Error updating git repo at %s" % (gitdir)
+    	gitmsg = "Exception: %s" % (e)
+
+ 
+    #    bashCommand = "export HOME=/usr/local/virtualenvs/bibworld/fakehome/; cd %s; git pull origin master" % (gitdir)
+    #	 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    # 	 gitmsg = process.communicate()[0]
+   
+    # try:	 
+    #	gitmsg = subprocess.check_output(['git', '--git-dir', gitdir, 'pull', 'origin', 'master'], shell=True)
+    # except Exception, e:
+    #	print e
+    #	gitmsg = "Exception: %s" % (e)
+
+    print "gitmsg: %s" % (gitmsg)
+
+    # reread everything
+    init()   
+
+    return flask.redirect('/')
+
+#############################################################
 
 if __name__ == '__main__':
     app.run(debug=True)
- 

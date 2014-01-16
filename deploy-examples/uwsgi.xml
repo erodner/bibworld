@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<uwsgi id="bibworld">
+  <module>fapuliserver:app</module>
+  <virtualenv>/usr/local/virtualenvs/bibworld</virtualenv>
+  <socket>/tmp/bibworld.sock</socket>
+  <processes>2</processes>
+  <chdir>/usr/local/virtualenvs/bibworld/fapuli/</chdir>
+  <pidfile>/tmp/bibworld.pid</pidfile>
+  <daemonize>/var/log/uwsgi/bibworld.log</daemonize>
+  <stats>/tmp/bibworld.stats</stats>
+  <log-format>``%(addr) - %(user) [%(ltime)] "%(method) %(uri) %(proto)" %(status) %(size)`` "%(referer)" "%(uagent)"</log-format>
+  <uid>uwsgi</uid>
+  <gid>www</gid>
+  <chmod-socket>775</chmod-socket>
+</uwsgi>
