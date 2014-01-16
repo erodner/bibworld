@@ -1,6 +1,7 @@
     .bibtitle { font-weight: normal; color: blue; padding:2px }
     .bibauthor { font-style: italic; padding: 2px }
     .bibvenue { font-style: bold; padding:2px }
+    .bibpages { font-style: bold; padding:2px }
     .bibyear { font-style: italic; padding:2px }
     .bibabstract { display: none; color:rgba(0,0,0,1); margin-top:8px; font-style:italic }
     .abstractlink { font-style: italic; color: blue; border-color: black; text-decoration: underline }
