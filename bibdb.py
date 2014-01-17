@@ -24,9 +24,9 @@ class bibdb:
     def matchEntryAllKeys ( self, pattern, p ):
         for key in p: 
             value = p[key]
-            if not re.search(pattern, value):
-                return False
-        return True
+            if re.search(pattern, value):
+                return True
+        return False
 
     """ get single reference """
     def getReference (self, k):

@@ -56,8 +56,8 @@ app = Flask(__name__, template_folder=args.htmlroot, static_folder=args.htmlroot
 def start(template=None):
     mybib = cache.get('mybib')
     if mybib is None:
-	init()
-	mybib = cache.get('mybib')
+        init()
+        mybib = cache.get('mybib')
 
     refs = mybib.getReferences()
     if not template:
@@ -69,8 +69,8 @@ def start(template=None):
 def print_author(author, template=None):
     mybib = cache.get('mybib')
     if mybib is None:
-	init()
-	mybib = cache.get('mybib')
+        init()
+        mybib = cache.get('mybib')
 
     refs = mybib.getReferences(author=author)
     if not template:
@@ -79,13 +79,14 @@ def print_author(author, template=None):
 
 @app.route('/search/<term>')
 @app.route('/search/<term>/<template>')
-def print_author(term, template=None):
+def print_search(term, template=None):
     mybib = cache.get('mybib')
     if mybib is None:
-	init()
-	mybib = cache.get('mybib')
+        init()
+        mybib = cache.get('mybib')
 
     refs = mybib.searchReferences(term)
+    print refs
     if not template:
         template = defaulttemplate
     return flask.render_template(template, refs=refs)
@@ -96,8 +97,8 @@ def print_author(term, template=None):
 def print_year(year, template=None):
     mybib = cache.get('mybib')
     if mybib is None:
-	init()
-	mybib = cache.get('mybib')
+        init()
+        mybib = cache.get('mybib')
 
     refs = mybib.getReferences(year=year)
     if not template:
@@ -108,8 +109,8 @@ def print_year(year, template=None):
 def print_bibtex(bibid):
     mybib = cache.get('mybib')
     if mybib is None:
-	init()
-	mybib = cache.get('mybib')
+        init()
+        mybib = cache.get('mybib')
 
     return mybib.getBibtexEntry( bibid, newlinestr='<br>', exported_keys=exported_bibkeys )
  
@@ -117,8 +118,8 @@ def print_bibtex(bibid):
 def print_teaserimage(bibid):
     mybib = cache.get('mybib')
     if mybib is None:
-	init()
-	mybib = cache.get('mybib')
+        init()
+        mybib = cache.get('mybib')
 
     ref = mybib.getReference(bibid) 
     if 'teaser' in ref:
@@ -131,8 +132,8 @@ def print_teaserimage(bibid):
 def print_pdf(bibid):
     mybib = cache.get('mybib')
     if mybib is None:
-	init()
-	mybib = cache.get('mybib')
+        init()
+        mybib = cache.get('mybib')
 
     ref = mybib.getReference(bibid) 
     if 'pdf' in ref:
@@ -153,7 +154,7 @@ def refresh():
         gitmsg = g.pull('origin', 'master')
     except git.GitCommandError, e:
         print "Error updating git repo at %s" % (gitdir)
-    	gitmsg = "Exception: %s" % (e)
+        gitmsg = "Exception: %s" % (e)
 
  
     #    bashCommand = "export HOME=/usr/local/virtualenvs/bibworld/fakehome/; cd %s; git pull origin master" % (gitdir)
