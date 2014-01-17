@@ -77,6 +77,19 @@ def print_author(author, template=None):
         template = defaulttemplate
     return flask.render_template(template, refs=refs)
 
+@app.route('/searchbyfield/<field>/<term>')
+@app.route('/searchbyfield/<field>/<term>/<template>')
+def print_searchfield(field, term, template=None):
+    mybib = cache.get('mybib')
+    if mybib is None:
+        init()
+        mybib = cache.get('mybib')
+
+    refs = mybib.getReferences(field=term)
+    if not template:
+        template = defaulttemplate
+    return flask.render_template(template, refs=refs)
+
 @app.route('/search/<term>')
 @app.route('/search/<term>/<template>')
 def print_search(term, template=None):
