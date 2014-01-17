@@ -23,13 +23,8 @@
         <td style='vertical-align:middle'>
         {% if item.type=='inproceedings' %}
           <span class=bibauthor>{{ item.author }}.</span>
-          {% if item.pdf %}
-          <a href="/pdf/{{ item.id }}">
-          {% endif %}
-          <span class=bibtitle>{{ item.title }}.</span>
-          {% if item.pdf %}
-          </a>
-          {% endif %}
+	  <span class=bibtitle>
+          {% if item.pdf %}<a href="/pdf/{{ item.id }}">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
           <br />
           <span class=bibvenue>{{ item.booktitle }}.</span>
           {% if item.pages %}
@@ -38,13 +33,9 @@
           <span class=bibyear>{{ item.year }}.</span>
         {% elif item.type=='article' %}
           <span class=bibauthor>{{ item.author }}.</span>
-          {% if item.pdf %}
-          <a href="/pdf/{{ item.id }}">
-          {% endif %}
-          <span class=bibtitle>{{ item.title }}.</span>
-          {% if item.pdf %}
-          </a>
-          {% endif %}
+          <span class=bibtitle>
+          {% if item.pdf %}<a href="/pdf/{{ item.id }}">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          <br />
           <span class=bibvenue>{{ item.journal }}.</span>
           {% if item.pages %}
           <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>

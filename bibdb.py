@@ -9,12 +9,21 @@ class bibdb:
     def __init__(self):
         print "Initialize bibdb"
 
+    """ try to match entries by searching terms in specific fields """
     def matchEntry ( self, sdicts, p ):
         for key in sdicts: 
             if not key in p:
                 return False
             value = p[key]
             pattern = sdicts[key]
+            if not re.search(pattern, value):
+                return False
+        return True
+	
+    """ try to match entries by searching in all fields """
+    def matchEntryAllKeys ( self, pattern, p ):
+        for key in p: 
+            value = p[key]
             if not re.search(pattern, value):
                 return False
         return True
@@ -31,6 +40,17 @@ class bibdb:
         for k in self.reflist.keys():
             p = self.reflist[k]
             if self.matchEntry( kwargs, p ): 
+                # add the entry to the filter result list
+                refs[k] = p
+
+        return refs
+
+    """ get references filtered by searching for a term in all fields """
+    def searchReferences (self, term):
+        refs = {}
+        for k in self.reflist.keys():
+            p = self.reflist[k]
+            if self.matchEntryAllKeys( term, p ): 
                 # add the entry to the filter result list
                 refs[k] = p
 
