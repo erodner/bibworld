@@ -85,7 +85,8 @@ def print_searchfield(field, term, template=None):
         init()
         mybib = cache.get('mybib')
 
-    refs = mybib.getReferences(field=term)
+    kwargs = {field: term}
+    refs = mybib.getReferences(**kwargs)
     if not template:
         template = defaulttemplate
     return flask.render_template(template, refs=refs)
