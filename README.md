@@ -30,6 +30,8 @@ Further features:
 * Teaser images: `http://yourwebserverurl/teaser/Rodner09:LFE`
 * PDF documents: `http://yourwebserverurl/pdf/Rodner09:LFE`
 * Refresh database: `http://yourwebserverurl/pdf/Rodner09:LFE` (this feature is still experiment and requires a bibtex file directly in the top level of a git repo)
+* Search for terms: `http://yourwebserverurl/search/Erik` this searches for Erik in every field of a BibTeX item, you can also specify regular expressions here
+* Search for terms in specific fields: `http://yourwebserverurl/searchbyfield/title/Gaussian%20Process` this searches for the text `Gaussian Process` only in the field `title`
 * Plain BibTeX entries: `http://yourwebserverurl/bib/Rodner09:LFE` (only a certain subset of the keys will be exported as specified in the source code: `exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year'}`
 
 Templates
