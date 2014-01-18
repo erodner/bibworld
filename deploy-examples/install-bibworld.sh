@@ -18,7 +18,7 @@ cd /usr/local/virtualenvs/bibworld/
 git clone $BIBWORLDSRC
 
 chown uwsgi:nginx /usr/local/virtualenvs/bibworld/ -R
-chmod 775 fapuli/fapuliserver.py
+chmod 775 bibworld/bibworldserver.py
 
 mkdir -p /var/log/uwsgi
 touch /var/log/uwsgi/bibworld.log
