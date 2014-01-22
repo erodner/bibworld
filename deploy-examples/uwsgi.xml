@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <uwsgi id="bibworld">
-  <module>fapuliserver:app</module>
+  <module>bibworldserver:app</module>
   <virtualenv>/usr/local/virtualenvs/bibworld</virtualenv>
   <socket>/tmp/bibworld.sock</socket>
   <processes>2</processes>
-  <chdir>/usr/local/virtualenvs/bibworld/fapuli/</chdir>
+  <chdir>/usr/local/virtualenvs/bibworld/bibworld/</chdir>
   <pidfile>/tmp/bibworld.pid</pidfile>
   <daemonize>/var/log/uwsgi/bibworld.log</daemonize>
   <stats>/tmp/bibworld.stats</stats>
