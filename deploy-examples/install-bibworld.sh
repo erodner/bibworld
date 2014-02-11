@@ -12,7 +12,7 @@ source /usr/bin/virtualenvwrapper.sh
 mkvirtualenv bibworld
 workon bibworld
 
-pip install flask uwsgi
+pip install flask uwsgi GitPython
 
 cd /usr/local/virtualenvs/bibworld/
 git clone $BIBWORLDSRC

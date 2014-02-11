@@ -162,8 +162,8 @@ def refresh():
 
     gitmsg = 'No git installed or git error. Updating locally only from %s/%s.' % (bibfile, gitdir)
 
-    import git
     try:
+    	import git
         g = git.cmd.Git( gitdir )
         gitmsg = g.pull('origin', 'master')
     except git.GitCommandError, e:
