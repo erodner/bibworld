@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-b', help='Source Bibtex file', default='/usr/local/virtualenvs/bibworld/bib/paper.bib')
 parser.add_argument('--htmlroot', help='Template folder', default='example-template-jinja2')
 parser.add_argument('-t', help='Default template', default='biborblist.html')
-parser.add_argument('-p', help='PDF directory', default='/home/dbv/publications/')
+parser.add_argument('-p', help='PDF directory', default='/home/publications/')
 args = parser.parse_args()
 bibfile = args.b
 pdfdir = args.p
