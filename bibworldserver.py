@@ -33,7 +33,7 @@ def init():
     mybib.addTeaserImages ( pdfdir )
 
     # add the references to the cache
-    cache.set('mybib', mybib, timeout=60*20)
+    cache.set('mybib', mybib, timeout=60*60*72)
     print "Number of publications: ", len(mybib.getReferences())
 
 
