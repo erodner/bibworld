@@ -20,6 +20,7 @@ args = parser.parse_args()
 bibfile = args.b
 pdfdir = args.p
 defaulttemplate = args.t
+oldstamp = None
 
 # fixed settings
 # bibtex keys that will be exported and provided in the downloaded bibtex keys
@@ -27,13 +28,17 @@ exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year'}
 
 """ server initialization (loading bibtex keys and setting up the cache) """
 def init():
-    mybib = bibdb()
-    mybib.readFromBibTex ( bibfile )
-    mybib.addPDFs ( pdfdir )
-    mybib.addTeaserImages ( pdfdir )
+    if oldstamp is None or oldstamp > os.path.getmtime(bibfile):
+	    mybib = bibdb()
+	    mybib.readFromBibTex ( bibfile )
+	    mybib.addPDFs ( pdfdir )
+	    mybib.addTeaserImages ( pdfdir )
 
-    # add the references to the cache
-    cache.set('mybib', mybib, timeout=60*60*72)
+	    # add the references to the cache
+	    cache.set('mybib', mybib, timeout=60*60*72)
+    else:
+	    print "Database is still up to date"
+    
     print "Number of publications: ", len(mybib.getReferences())
 
 
@@ -183,6 +188,7 @@ def refresh():
 
     print "gitmsg: %s" % (gitmsg)
 
+    oldstamp = None
     # reread everything
     init()   
 

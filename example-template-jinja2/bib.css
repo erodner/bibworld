@@ -1,12 +1,12 @@
-    .bibtitle { font-weight: normal; color: blue; padding:2px }
+    .bibtitle { font-weight: normal; padding:2px }
     .bibauthor { font-style: italic; padding: 2px }
     .bibvenue { font-style: bold; padding:2px }
     .bibpages { font-style: bold; padding:2px }
     .bibyear { font-style: italic; padding:2px }
     .bibabstract { display: none; color:rgba(0,0,0,1); margin-top:8px; font-style:italic }
-    .abstractlink { font-style: italic; color: blue; border-color: black; text-decoration: underline }
-    .pdflink { font-style: italic; color: blue }
+    .abstractlink { font-style: italic; border-color: black; text-decoration: underline; cursor: pointer }
+    .pdflink { font-style: italic }
     .vspace { margin-top:0.3em }
-    .block blockquote{border-color:#ddd;border-color:rgba(0,0,0,0.15)}
-    .paperblock{border: 1px solid silver;padding:5px;-webkit-border-radius:1px;-moz-border-radius:1px;border-radius:1px; background-color:rgba(0,0,0,0.08); clear:both; overflow:hidden; vertical-align:middle}
+    .block blockquote{border-color:rgba(0,0,0,0.15)}
+    .paperblock{border: 1px solid silver ;padding:5px;-webkit-border-radius:1px;-moz-border-radius:1px;border-radius:1px; background-color:rgba(0,0,0,0.04); clear:both; overflow:hidden; vertical-align:middle}
     .teaserimg{float:left; padding: 5px}
