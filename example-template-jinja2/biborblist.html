@@ -19,7 +19,11 @@
         <table>
         <td width=80px>
         {% if item.teaser %}
+	  {% if 'teaserwidth' in request.args: %}
+          <img width={{ request.args['teaserwidth'] }} class=teaserimg src="/teaser/{{ item.id }}">
+	  {% else %}
           <img width=70px class=teaserimg src="/teaser/{{ item.id }}">
+	  {% endif %}
         {% endif %}
         </td>
      

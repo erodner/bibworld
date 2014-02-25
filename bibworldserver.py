@@ -1,6 +1,6 @@
 # Documentation of flask at http://flask.pocoo.org/docs/flask-docs.pdf
 import flask
-from flask import Flask, make_response, abort, send_file
+from flask import Flask, make_response, abort, send_file, request
 from bibdb import bibdb
 import argparse
 import os
