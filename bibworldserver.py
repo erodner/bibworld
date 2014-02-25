@@ -38,6 +38,7 @@ def init():
 	    cache.set('mybib', mybib, timeout=60*60*72)
     else:
 	    print "Database is still up to date"
+	    cache.set('mybib', mybib, timeout=60*60*72)
     
     print "Number of publications: ", len(mybib.getReferences())
 

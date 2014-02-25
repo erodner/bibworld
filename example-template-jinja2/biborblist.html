@@ -17,13 +17,17 @@
     {% for item in group.list %}
         <div class='paperblock' >
         <table>
-        <td width=80px>
-        {% if item.teaser %}
-	  {% if 'teaserwidth' in request.args: %}
-          <img width={{ request.args['teaserwidth'] }} class=teaserimg src="/teaser/{{ item.id }}">
+	  {% if 'teasercolwidth' in request.args: %}
+        <td width={{ request.args['teasercolwidth']}}>
 	  {% else %}
-          <img width=70px class=teaserimg src="/teaser/{{ item.id }}">
+        <td width=80px>
 	  {% endif %}
+        {% if item.teaser %}
+          {% if 'teaserwidth' in request.args: %}
+                <img width={{ request.args['teaserwidth'] }} class=teaserimg src="/teaser/{{ item.id }}">
+          {% else %}
+                <img width=70px class=teaserimg src="/teaser/{{ item.id }}">
+          {% endif %}
         {% endif %}
         </td>
      
