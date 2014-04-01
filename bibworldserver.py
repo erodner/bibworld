@@ -54,6 +54,19 @@ init()
 app = Flask(__name__, template_folder=args.htmlroot, static_folder=args.htmlroot)
 
 #
+# Helper functions
+#
+def webserver_send_file ( fn, mimetype ):
+    # http://stackoverflow.com/questions/5410255/preferred-method-for-downloading-a-file-generated-on-the-fly-in-flask
+    basefn = fn.replace ( pdfdir, '/staticfiles/' ) 
+    response = make_response()
+    response.headers['Cache-Control']  = 'no-cache'
+    response.headers['Content-Type']   = mimetype
+    response.headers['X-Accel-Redirect'] = basefn
+    print "Sending file %s as %s" % ( fn, basefn )
+    return response
+
+#
 # Main FLASK functions
 #
 @app.route('/all/<template>')
@@ -143,7 +156,9 @@ def print_teaserimage(bibid):
 
     ref = mybib.getReference(bibid) 
     if 'teaser' in ref:
-        return send_file( ref['teaser'] )
+	print ref['teaser']
+        #return send_file( ref['teaser'], cache_timeout=60, add_etags=False, conditional=True )
+        return webserver_send_file( ref['teaser'], "image/png" )
     else:
         print abort(404)
 
@@ -157,7 +172,7 @@ def print_pdf(bibid):
 
     ref = mybib.getReference(bibid) 
     if 'pdf' in ref:
-        return send_file( ref['pdf'] )
+        return send_file( ref['pdf'], cache_timeout=60 )
     else:
         print abort(404)
 

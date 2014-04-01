@@ -12,5 +12,7 @@
   <log-format>``%(addr) - %(user) [%(ltime)] "%(method) %(uri) %(proto)" %(status) %(size)`` "%(referer)" "%(uagent)"</log-format>
   <uid>uwsgi</uid>
   <gid>www</gid>
+  <cache>off</cache>
   <chmod-socket>775</chmod-socket>
+  <logto>/var/log/uwsgi/details.log</logto>
 </uwsgi>
