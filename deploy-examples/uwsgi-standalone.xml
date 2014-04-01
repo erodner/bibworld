@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<uwsgi id="bibworld">
+  <module>bibworldserver:app</module>
+  <virtualenv>/usr/local/virtualenvs/bibworld</virtualenv>
+  <http>127.0.0.1:5000</http>
+  <processes>1</processes>
+  <chdir>/usr/local/virtualenvs/bibworld/bibworld/</chdir>
+  <log-format>``%(addr) - %(user) [%(ltime)] "%(method) %(uri) %(proto)" %(status) %(size)`` "%(referer)" "%(uagent)"</log-format>
+  <uid>uwsgi</uid>
+  <gid>www</gid>
+  <cache>0</cache>
+</uwsgi>
