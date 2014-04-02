@@ -172,7 +172,8 @@ def print_pdf(bibid):
 
     ref = mybib.getReference(bibid) 
     if 'pdf' in ref:
-        return send_file( ref['pdf'], cache_timeout=60 )
+        #return send_file( ref['pdf'], cache_timeout=60 )
+        return webserver_send_file( ref['pdf'], "application/pdf" )
     else:
         print abort(404)
 
