@@ -59,6 +59,9 @@
         {% if item.pdf %}
         <a href="/pdf/{{ item.id }}"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf" title="pdf"/></a>
         {% endif %}
+        {% if item.url %}
+        <a href="{{ item.url }}"><img src="{{ url_for('static', filename='web-link.png') }}" alt="www" title="www" target="_blank"/></a>
+        {% endif %}
 
         {% if item.abstract %}
         <span class="abstractlink" onClick="abstractclick('{{ item.id }}');">more ...</span>
