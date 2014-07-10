@@ -80,7 +80,7 @@ class bibdb:
         else:
             entry = ""
             p = self.reflist[key]
-            entry = entry + "@%s{%s%s" % ( p['type'], p['id'], newlinestr )
+            entry = entry + "@%s{%s,%s" % ( p['type'], p['id'], newlinestr )
             for k in p.keys():
                 if exported_keys and not k in exported_keys:
                     continue

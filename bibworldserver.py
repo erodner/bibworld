@@ -16,15 +16,17 @@ parser.add_argument('-b', help='Source Bibtex file', default='/usr/local/virtual
 parser.add_argument('--htmlroot', help='Template folder', default='example-template-jinja2')
 parser.add_argument('-t', help='Default template', default='biborblist.html')
 parser.add_argument('-p', help='PDF directory', default='/home/publications/')
+parser.add_argument('--xaccel', help='use X-Accel-Redirect (apache required)', action='store_true')
 args = parser.parse_args()
 bibfile = args.b
 pdfdir = args.p
 defaulttemplate = args.t
+use_x_accel_redirect = args.xaccel
 oldstamp = None
 
 # fixed settings
 # bibtex keys that will be exported and provided in the downloaded bibtex keys
-exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year'}
+exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year', 'volume', 'number'}
 
 """ server initialization (loading bibtex keys and setting up the cache) """
 def init():
@@ -156,9 +158,10 @@ def print_teaserimage(bibid):
 
     ref = mybib.getReference(bibid) 
     if 'teaser' in ref:
-	print ref['teaser']
-        #return send_file( ref['teaser'], cache_timeout=60, add_etags=False, conditional=True )
-        return webserver_send_file( ref['teaser'], "image/png" )
+        if not use_x_accel_redirect:
+            return send_file( ref['teaser'], cache_timeout=60, add_etags=False, conditional=True )
+        else:
+            return webserver_send_file( ref['teaser'], "image/png" )
     else:
         print abort(404)
 

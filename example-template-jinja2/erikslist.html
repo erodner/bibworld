@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Publications</title>
-<link href="{{ url_for('static', filename='bib.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='bib_eriks.css') }}" rel="stylesheet" type="text/css">
 <script src="{{ url_for('static', filename='bib.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/style.css" />
 <link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/table.css" />
@@ -20,13 +20,13 @@
 	  {% if 'teasercolwidth' in request.args: %}
         <td width={{ request.args['teasercolwidth']}}>
 	  {% else %}
-        <td width=80px>
+        <td width=20%>
 	  {% endif %}
         {% if item.teaser %}
           {% if 'teaserwidth' in request.args: %}
                 <img width={{ request.args['teaserwidth'] }} class=teaserimg src="/teaser/{{ item.id }}">
           {% else %}
-                <img width=70px class=teaserimg src="/teaser/{{ item.id }}">
+                <img width=90% class=teaserimg src="/teaser/{{ item.id }}">
           {% endif %}
         {% endif %}
         </td>
