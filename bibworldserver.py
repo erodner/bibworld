@@ -16,12 +16,12 @@ parser.add_argument('-b', help='Source Bibtex file', default='/usr/local/virtual
 parser.add_argument('--htmlroot', help='Template folder', default='example-template-jinja2')
 parser.add_argument('-t', help='Default template', default='biborblist.html')
 parser.add_argument('-p', help='PDF directory', default='/home/publications/')
-parser.add_argument('--xaccel', help='use X-Accel-Redirect (apache required)', action='store_true')
+parser.add_argument('--noxaccel', help='do not use X-Accel-Redirect (apache required)', action='store_true')
 args = parser.parse_args()
 bibfile = args.b
 pdfdir = args.p
 defaulttemplate = args.t
-use_x_accel_redirect = args.xaccel
+use_x_accel_redirect = not args.noxaccel
 oldstamp = None
 
 # fixed settings
@@ -65,7 +65,7 @@ def webserver_send_file ( fn, mimetype ):
     response.headers['Cache-Control']  = 'no-cache'
     response.headers['Content-Type']   = mimetype
     response.headers['X-Accel-Redirect'] = basefn
-    print "Sending file %s as %s" % ( fn, basefn )
+    print "Sending file %s as %s with X-Accel-Direct" % ( fn, basefn )
     return response
 
 #
@@ -167,6 +167,7 @@ def print_teaserimage(bibid):
 
 
 @app.route('/pdf/<bibid>')
+@app.route('/pdf/<bibid>.pdf')
 def print_pdf(bibid):
     mybib = cache.get('mybib')
     if mybib is None:
@@ -175,8 +176,10 @@ def print_pdf(bibid):
 
     ref = mybib.getReference(bibid) 
     if 'pdf' in ref:
-        #return send_file( ref['pdf'], cache_timeout=60 )
-        return webserver_send_file( ref['pdf'], "application/pdf" )
+        if not use_x_accel_redirect:
+            return send_file( ref['pdf'], cache_timeout=60 )
+        else:
+            return webserver_send_file( ref['pdf'], "application/pdf" )
     else:
         print abort(404)
 
@@ -217,4 +220,5 @@ def refresh():
 #############################################################
 
 if __name__ == '__main__':
+    use_x_accel_redirect = False
     app.run(debug=True)
