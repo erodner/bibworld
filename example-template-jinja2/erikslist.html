@@ -20,7 +20,7 @@
 	  {% if 'teasercolwidth' in request.args: %}
         <td width={{ request.args['teasercolwidth']}}>
 	  {% else %}
-        <td width=20%>
+        <td width=150px>
 	  {% endif %}
         {% if item.teaser %}
           {% if 'teaserwidth' in request.args: %}
@@ -33,9 +33,10 @@
      
         <td style='vertical-align:middle'>
         {% if item.type=='inproceedings' %}
-          <span class=bibauthor>{{ item.author }}.</span>
-	      <span class=bibtitle>
+ 	      <span class=bibtitle>
           {% if item.pdf %}<a href="/pdf/{{ item.id }}">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          <br />
+          <span class=bibauthor>{{ item.author }}.</span>
           <br />
           <span class=bibvenue>{{ item.booktitle }}.</span>
           {% if item.pages %}
@@ -43,9 +44,10 @@
           {% endif %}
           <span class=bibyear>{{ item.year }}.</span>
         {% elif item.type=='article' %}
-          <span class=bibauthor>{{ item.author }}.</span>
           <span class=bibtitle>
           {% if item.pdf %}<a href="/pdf/{{ item.id }}">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          <br />
+          <span class=bibauthor>{{ item.author }}.</span>
           <br />
           <span class=bibvenue>{{ item.journal }}.</span>
           {% if item.volume and item.number %}
@@ -56,7 +58,9 @@
           {% endif %}
           <span class=bibyear>{{ item.year }}.</span>
         {% else %}
-          <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}</span> (<span class=bibyear>{{ item.year }}</span>)
+          <span class=bibtitle>{{ item.title }}</span> 
+          <span class=bibauthor>{{ item.author }}.</span>
+          (<span class=bibyear>{{ item.year }}</span>)
         {% endif %}
         <a href="/bib/{{ item.id }}" onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
         {% if item.pdf %}
