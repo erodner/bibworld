@@ -65,13 +65,16 @@
         {% if item.url %}
         <a href="{{ item.url }}"><img src="{{ url_for('static', filename='web-link.png') }}" alt="www" title="www" target="_blank"/></a>
         {% endif %}
+        {% if item.code %}
+        <a href="{{ item.code }}"><img src="{{ url_for('static', filename='code-link.png') }}" alt="code" title="code" target="_blank"/></a>
+        {% endif %}
 
         {% if item.abstract %}
         <span class="abstractlink" onClick="abstractclick('{{ item.id }}');">more ...</span>
         <div class="bibabstract" id="{{ item.id }}">
           <br />
           <div class='vspace'></div>
-          Abstract: {{ item.abstract }}
+          Abstract: {{ item.abstract|safe }}
           {% endif %}
         </div>
         </td>
