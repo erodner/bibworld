@@ -48,11 +48,12 @@
           {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
           <br />
           <span class=bibvenue>{{ item.journal }}.</span>
-          {% if item.volume and item.number %}
-          <span class=bibpages>{{ item.volume }}({{ item.number }}):</span>
-          {% endif %}
+          {% if item.volume and item.number and item.pages %}
+          <span class=bibpages>{{ item.volume }}({{ item.number }}):{{ item.pages|replace("--","-") }}</span>
+          {% else %}
           {% if item.pages %}
           <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
+          {% endif %}
           {% endif %}
           <span class=bibyear>{{ item.year }}.</span>
         {% else %}
