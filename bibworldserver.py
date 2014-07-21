@@ -33,8 +33,12 @@ def init():
     if oldstamp is None or oldstamp > os.path.getmtime(bibfile):
 	    mybib = bibdb()
 	    mybib.readFromBibTex ( bibfile )
-	    mybib.addPDFs ( pdfdir )
-	    mybib.addTeaserImages ( pdfdir )
+	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.pdf' ), 'pdf' )
+      # compatibility for the old format
+	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.pdf.teaser.png' ), 'teaser' )
+	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.teaser.png' ), 'teaser' )
+	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.presentation.pdf' ), 'presentation' )
+	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.supplementary.pdf' ), 'supplementary' )
 
 	    # add the references to the cache
 	    cache.set('mybib', mybib, timeout=60*60*72)
@@ -121,7 +125,6 @@ def print_search(term, template=None):
         mybib = cache.get('mybib')
 
     refs = mybib.searchReferences(term)
-    print refs
     if not template:
         template = defaulttemplate
     return flask.render_template(template, refs=refs)
@@ -149,19 +152,31 @@ def print_bibtex(bibid):
 
     return mybib.getBibtexEntry( bibid, newlinestr='<br>', exported_keys=exported_bibkeys )
  
-@app.route('/teaser/<bibid>')
-def print_teaserimage(bibid):
+@app.route('/bibsearch/<term>')
+def print_bibtexsearch(term):
+    mybib = cache.get('mybib')
+    if mybib is None:
+        init()
+        mybib = cache.get('mybib')
+
+    refs = mybib.searchReferences(term)
+    output = ""
+    for bibid in refs:
+        output = output + mybib.getBibtexEntry( bibid, newlinestr='<br>', exported_keys=exported_bibkeys ) + '<br>'
+    return output
+
+def send_aux_file( bibid, tag, mimetype ):
     mybib = cache.get('mybib')
     if mybib is None:
         init()
         mybib = cache.get('mybib')
 
     ref = mybib.getReference(bibid) 
-    if 'teaser' in ref:
+    if tag in ref:
         if not use_x_accel_redirect:
-            return send_file( ref['teaser'], cache_timeout=60, add_etags=False, conditional=True )
+            return send_file( ref[tag], cache_timeout=60 )
         else:
-            return webserver_send_file( ref['teaser'], "image/png" )
+            return webserver_send_file( ref[tag], mimetype )
     else:
         print abort(404)
 
@@ -169,19 +184,25 @@ def print_teaserimage(bibid):
 @app.route('/pdf/<bibid>')
 @app.route('/pdf/<bibid>.pdf')
 def print_pdf(bibid):
-    mybib = cache.get('mybib')
-    if mybib is None:
-        init()
-        mybib = cache.get('mybib')
+    return send_aux_file( bibid, 'pdf', "application/pdf" )
 
-    ref = mybib.getReference(bibid) 
-    if 'pdf' in ref:
-        if not use_x_accel_redirect:
-            return send_file( ref['pdf'], cache_timeout=60 )
-        else:
-            return webserver_send_file( ref['pdf'], "application/pdf" )
-    else:
-        print abort(404)
+@app.route('/teaser/<bibid>')
+@app.route('/teaser/<bibid>.png')
+def print_teaser(bibid):
+    return send_aux_file( bibid, 'teaser', "image/png" )
+
+@app.route('/presentation/<bibid>')
+@app.route('/presentation/<bibid>.pdf')
+def print_presentation(bibid):
+    return send_aux_file( bibid, 'presentation', "application/pdf" )
+
+@app.route('/supplementary/<bibid>')
+@app.route('/supplementary/<bibid>.pdf')
+def print_supplementary(bibid):
+    return send_aux_file( bibid, 'supplementary', "application/pdf" )
+
+
+
 
 @app.route('/refresh')
 def refresh():

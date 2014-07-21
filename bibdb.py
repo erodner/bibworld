@@ -56,22 +56,14 @@ class bibdb:
 
         return refs
 
-    """ check available teaser images from a directory """
-    def addTeaserImages (self, teaserdirectory, verbose=True):
+    """ check available auxiliary files like pdfs or teaser images """
+    def addAuxFiles (self, formattemplate, tag, verbose=True):
         for k in self.reflist.keys():
-            fname = "%s.pdf.teaser.png" % (os.path.join( teaserdirectory, k ))
+            fname = formattemplate % ( k )
             if os.path.isfile( fname ):
-                print "Adding teaser image: %s" % ( fname )
-                self.reflist[k]['teaser'] = fname
-
-    """ check available pdfs from a directory """
-    def addPDFs (self, pdfdirectory, verbose=True):
-        for k in self.reflist.keys():
-            fname = "%s.pdf" % (os.path.join( pdfdirectory, k ))
-            if os.path.isfile( fname ):
-                print "Adding pdf document: %s" % ( fname )
-                self.reflist[k]['pdf'] = fname
-
+                if verbose:
+                    print "Adding %s document: %s" % ( tag, fname )
+                self.reflist[k][tag] = fname
 
     """ get a single BibTex entry and restrict the export fields """
     def getBibtexEntry ( self, key, exported_keys=None, newlinestr="\n" ):

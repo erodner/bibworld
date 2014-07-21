@@ -35,7 +35,7 @@
         {% if item.type=='inproceedings' %}
           <span class=bibauthor>{{ item.author }}.</span>
 	      <span class=bibtitle>
-          {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}</span>
           <br />
           <span class=bibvenue>{{ item.booktitle }}.</span>
           {% if item.pages %}
@@ -45,7 +45,7 @@
         {% elif item.type=='article' %}
           <span class=bibauthor>{{ item.author }}.</span>
           <span class=bibtitle>
-          {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}</span>
           <br />
           <span class=bibvenue>{{ item.journal }}.</span>
           {% if item.volume and item.number and item.pages %}
@@ -69,6 +69,13 @@
         {% if item.code %}
         <a href="{{ item.code }}"><img src="{{ url_for('static', filename='code-link.png') }}" alt="code" title="code" target="_blank"/></a>
         {% endif %}
+        {% if item.presentation %}
+        <a href="/presentation/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='presentation.png') }}" alt="presentation" title="presentation" target="_blank"/></a>
+        {% endif %}
+        {% if item.supplementary %}
+        <a href="/supplementary/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='supplementary.png') }}" alt="supplementary" title="supplementary" target="_blank"/></a>
+        {% endif %}
+
 
         {% if item.abstract %}
         <span class="abstractlink" onClick="abstractclick('{{ item.id }}');">more ...</span>
