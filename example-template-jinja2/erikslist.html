@@ -73,7 +73,7 @@
         <a href="{{ item.code }}"><img src="{{ url_for('static', filename='code-link.png') }}" alt="code" title="code" target="_blank"/></a>
         {% endif %}
         {% if item.presentation %}
-        <a href="/presentation/{{ item.bibid }}.pdf"><img src="{{ url_for('static', filename='presentation.png') }}" alt="presentation" title="presentation" target="_blank"/></a>
+        <a href="/presentation/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='presentation.png') }}" alt="presentation" title="presentation" target="_blank"/></a>
         {% endif %}
         {% if item.supplementary %}
         <a href="/supplementary/{{ item.bibid }}.pdf"><img src="{{ url_for('static', filename='supplementary.png') }}" alt="supplementary" title="supplementary" target="_blank"/></a>
