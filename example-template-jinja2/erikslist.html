@@ -62,6 +62,13 @@
           <span class=bibauthor>{{ item.author }}.</span>
           (<span class=bibyear>{{ item.year }}</span>)
         {% endif %}
+	{% if 'ward' in item.note %}
+		<span class=awardnote> {{ item.note }}</span>
+	{% else %}	
+		{% if item.note %}
+		<span class=note> {{ item.note }}</span>
+		{% endif %}
+	{% endif %}
         <a href="/bib/{{ item.id }}" onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
         {% if item.pdf %}
         <a href="/pdf/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf" title="pdf"/></a>

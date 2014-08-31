@@ -3,6 +3,8 @@
     .bibvenue { font-style: bold; padding:2px; font-family: 'PT Serif', serif; }
     .bibpages { font-style: bold; padding:2px; font-family: 'PT Serif', serif; }
     .bibyear { font-style: italic; padding:2px; font-family: 'PT Serif', serif; }
+    .note { font-style: italic; padding:2px }
+    .awardnote { font-weight: bold; color:rgba(165, 27, 27, 1); padding:2px }
     .bibabstract { display: none; color:rgba(0,0,0,1); margin-top:8px; font-style:italic; font-family: 'PT Serif', serif; }
     .abstractlink { font-style: italic; border-color: black; text-decoration: underline; cursor: pointer; font-family: 'PT Serif', serif; }
     .pdflink { font-style: italic; font-family: 'PT Serif', serif; }
