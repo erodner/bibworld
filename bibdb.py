@@ -1,16 +1,20 @@
 # coding=utf-8
 import re
 import os
+import json
 
 class bibdb:
   
     reflist = []
 
     def __init__(self):
-        print "Initialize bibdb"
+        pass
 
     """ try to match entries by searching terms in specific fields """
     def matchEntry ( self, sdicts, p ):
+        if not 'year' in p:
+            return True
+
         for key in sdicts: 
             if not key in p:
                 return False
@@ -22,6 +26,9 @@ class bibdb:
 	
     """ try to match entries by searching in all fields """
     def matchEntryAllKeys ( self, pattern, p ):
+        if not 'year' in p:
+            return True
+
         for key in p: 
             value = p[key]
             if re.search(pattern, value):
@@ -31,6 +38,8 @@ class bibdb:
     """ get single reference """
     def getReference (self, k):
         return self.reflist[k]
+
+           
 
     """ get references (possibly filtered) """
     def getReferences (self, **kwargs):
@@ -57,13 +66,17 @@ class bibdb:
         return refs
 
     """ check available auxiliary files like pdfs or teaser images """
-    def addAuxFiles (self, formattemplate, tag, verbose=True):
+    def addAuxFiles (self, formattemplate, tag, verbose=True, removeIfUnavailable=True):
         for k in self.reflist.keys():
             fname = formattemplate % ( k )
             if os.path.isfile( fname ):
                 if verbose:
                     print "Adding %s document: %s" % ( tag, fname )
                 self.reflist[k][tag] = fname
+            elif removeIfUnavailable:
+                # rather remove the tag when available
+                if tag in self.reflist[k]:
+                    del self.reflist[k][tag]
 
     """ get a single BibTex entry and restrict the export fields """
     def getBibtexEntry ( self, key, exported_keys=None, newlinestr="\n" ):
@@ -82,13 +95,14 @@ class bibdb:
             return entry
 
     """ read bibtex entries from a file """
-    def readFromBibTex(self, bibfile):
+    def readFromBibTex(self, bibfile, verbose=True):
         # The following code is a modified version of 
         # bibtex2html @ github (by Gustavo de Oliverira)
 
         metabibkeys = {'jabref-meta'}
 
-        print "Reading references from: ", bibfile
+        if verbose:
+            print "Reading references from: ", bibfile
 
         with open(bibfile, 'r') as f:
             datalist = f.readlines()
@@ -168,14 +182,16 @@ class bibdb:
                 if 'id' in keydict:
                     bibid = keydict['id']
                 else:
-                    print "No BibTex ID given or error during parsing"
+                    if verbose:
+                        print "No BibTex ID given or error during parsing"
 
                 #print "Adding %s" % (bibid)
                 rejected = False
 
                 if not rejected:
-                   if not 'year' in keydict:
-                      print "BibTex entry %s has no year specified and will therefore be ignored!" % (bibid)
+                   if not 'year' in keydict and keydict['type'] != 'bibworldnode':
+                      if verbose:
+                          print "BibTex entry %s has no year specified and will therefore be ignored!" % (bibid)
                       rejected = True
 
                 if not rejected:
@@ -188,4 +204,3 @@ class bibdb:
                     self.reflist[bibid] = keydict
 
 
-                 

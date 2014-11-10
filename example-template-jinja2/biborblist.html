@@ -12,7 +12,7 @@
 
 
 <div class='block' >
-{% for group in refs.values()|groupby(attribute='year')|reverse %}
+{% for group in refs.values()|rejectattr("year", "undefined")|groupby(attribute='year')|reverse %}
     <h2>{{ group.grouper }}</h2>
     {% for item in group.list %}
         <div class='paperblock' >

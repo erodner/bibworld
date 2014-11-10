@@ -36,7 +36,7 @@ def init():
 	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.pdf' ), 'pdf' )
       # compatibility for the old format
 	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.pdf.teaser.png' ), 'teaser' )
-	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.teaser.png' ), 'teaser' )
+	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.teaser.png' ), 'teaser', removeIfUnavailable=False )
 	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.presentation.pdf' ), 'presentation' )
 	    mybib.addAuxFiles ( os.path.join( pdfdir, '%s.supplementary.pdf' ), 'supplementary' )
 
@@ -239,6 +239,9 @@ def refresh():
     return flask.redirect('/')
 
 #############################################################
+
+from bibgraph import getGraphJSON
+app.jinja_env.globals.update(getgraph=getGraphJSON)
 
 if __name__ == '__main__':
     use_x_accel_redirect = False
