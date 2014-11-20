@@ -7,6 +7,7 @@ import tengjabref
 import tengjinja2
 import re
 
+
 # Get the BibTeX and template file names
 parser = argparse.ArgumentParser()
 parser.add_argument('-b', help='Source Bibtex file', required=True)
