@@ -16,7 +16,11 @@
     <h2>{{ group.grouper }}</h2>
     {% for item in group.list %}
         <div class='paperblock' >
-        <table>
+	  {% if 'tablewidth' in request.args: %}
+        <table width={{ request.args['tablewidth'] }}>
+	  {% else %}
+        <table width=100%>
+	  {% endif %}
 	  {% if 'teasercolwidth' in request.args: %}
         <td width={{ request.args['teasercolwidth']}}>
 	  {% else %}
