@@ -4,18 +4,19 @@ import os
 import json
 
 class bibdb:
-  
+
     reflist = []
 
-    def __init__(self):
-        pass
+    def __init__(self, origdb=None):
+        if not origdb is None:
+            self.reflist = dict(origdb.getReferences())
 
-    """ try to match entries by searching terms in specific fields """
     def matchEntry ( self, sdicts, p ):
+        """ try to match entries by searching terms in specific fields """
         if not 'year' in p:
             return True
 
-        for key in sdicts: 
+        for key in sdicts:
             if not key in p:
                 return False
             value = p[key]
@@ -23,50 +24,56 @@ class bibdb:
             if not re.search(pattern, value):
                 return False
         return True
-	
-    """ try to match entries by searching in all fields """
+
     def matchEntryAllKeys ( self, pattern, p ):
+        """ try to match entries by searching in all fields """
         if not 'year' in p:
             return True
 
-        for key in p: 
+        for key in p:
             value = p[key]
             if re.search(pattern, value):
                 return True
         return False
 
-    """ get single reference """
+    def update(self, refs):
+        """ update the references with the given dictionary """
+        for k in refs:
+            if k in self.reflist:
+                self.reflist[k].update(refs[k])
+            else:
+                self.reflist[k] = dict(refs[k])
+
     def getReference (self, k):
+        """ get single reference """
         return self.reflist[k]
 
-           
-
-    """ get references (possibly filtered) """
     def getReferences (self, **kwargs):
-        # now filter references according to 
+        """ get references (possibly filtered) """
+        # now filter references according to
         # the keyword arguments
         refs = {}
         for k in self.reflist.keys():
             p = self.reflist[k]
-            if self.matchEntry( kwargs, p ): 
+            if self.matchEntry( kwargs, p ):
                 # add the entry to the filter result list
                 refs[k] = p
 
         return refs
 
-    """ get references filtered by searching for a term in all fields """
     def searchReferences (self, term):
+        """ get references filtered by searching for a term in all fields """
         refs = {}
         for k in self.reflist.keys():
             p = self.reflist[k]
-            if self.matchEntryAllKeys( term, p ): 
+            if self.matchEntryAllKeys( term, p ):
                 # add the entry to the filter result list
                 refs[k] = p
 
         return refs
 
-    """ check available auxiliary files like pdfs or teaser images """
     def addAuxFiles (self, formattemplate, tag, verbose=True, removeIfUnavailable=True):
+        """ check available auxiliary files like pdfs or teaser images """
         for k in self.reflist.keys():
             fname = formattemplate % ( k )
             if os.path.isfile( fname ):
@@ -78,8 +85,18 @@ class bibdb:
                 if tag in self.reflist[k]:
                     del self.reflist[k][tag]
 
-    """ get a single BibTex entry and restrict the export fields """
+    def write( self, filename ):
+        with open(filename, 'w') as f:
+            for k in self.reflist:
+                p = self.reflist[k]
+                f.write("@{0}{{{1},\n".format(p['type'], k))
+                for fieldk in p:
+                    f.write("\t{0} = {{{1}}},\n".format(fieldk, p[fieldk]))
+                f.write("}\n\n")
+
+
     def getBibtexEntry ( self, key, exported_keys=None, newlinestr="\n" ):
+        """ get a single BibTex entry and restrict the export fields """
         if not key in self.reflist:
             return ""
         else:
@@ -94,9 +111,9 @@ class bibdb:
             entry = entry +  "}%s" % (newlinestr)
             return entry
 
-    """ read bibtex entries from a file """
-    def readFromBibTex(self, bibfile, verbose=True):
-        # The following code is a modified version of 
+    def readFromBibTex(self, bibfile, verbose=True, year_is_essential=True, use_raw_encoding=False):
+        """ read bibtex entries from a file """
+        # The following code is a modified version of
         # bibtex2html @ github (by Gustavo de Oliverira)
 
         metabibkeys = {'jabref-meta'}
@@ -113,22 +130,23 @@ class bibdb:
 
             # Convert a list into a string
             data = u''
-            for s in datalist: 
-                if re.match('^\s*%', s): 
+            for s in datalist:
+                if re.match('^\s*%', s):
                     continue
                 if re.match('^\s*$', s):
                     continue
- 
+
                 try:
                   s = unicode(s + ' ', errors='ignore')
                 except UnicodeDecodeError, e:
                   print s
 
-                s = re.sub( r'\{?\\"o\}?', u'ö', s )
-                s = re.sub( r'\{?\\"u\}?', u'ü', s )
-                s = re.sub( r'\{?\\"a\}?', u'ä', s )
-                s = re.sub( r'\{?\\ss\}?', u'ß', s )
-                
+                if not use_raw_encoding:
+                    s = re.sub( r'\{?\\"o\}?', u'ö', s )
+                    s = re.sub( r'\{?\\"u\}?', u'ü', s )
+                    s = re.sub( r'\{?\\"a\}?', u'ä', s )
+                    s = re.sub( r'\{?\\ss\}?', u'ß', s )
+
                 data += s + u' '
 
 
@@ -178,7 +196,7 @@ class bibdb:
                     key = key.lower()
                     value = value.strip(' ,\n\t{}')
                     keydict[key] = value
-                
+
                 if 'id' in keydict:
                     bibid = keydict['id']
                 else:
@@ -189,7 +207,7 @@ class bibdb:
                 rejected = False
 
                 if not rejected:
-                   if not 'year' in keydict and keydict['type'] != 'bibworldnode':
+                   if year_is_essential and not 'year' in keydict and keydict['type'] != 'bibworldnode':
                       if verbose:
                           print "BibTex entry %s has no year specified and will therefore be ignored!" % (bibid)
                       rejected = True
