@@ -5,7 +5,7 @@ import json
 
 class bibdb:
 
-    reflist = []
+    reflist = {}
 
     def __init__(self, origdb=None):
         if not origdb is None:
@@ -53,7 +53,7 @@ class bibdb:
         # now filter references according to
         # the keyword arguments
         refs = {}
-        for k in self.reflist.keys():
+        for k in self.reflist:
             p = self.reflist[k]
             if self.matchEntry( kwargs, p ):
                 # add the entry to the filter result list
@@ -64,7 +64,7 @@ class bibdb:
     def searchReferences (self, term):
         """ get references filtered by searching for a term in all fields """
         refs = {}
-        for k in self.reflist.keys():
+        for k in self.reflist:
             p = self.reflist[k]
             if self.matchEntryAllKeys( term, p ):
                 # add the entry to the filter result list
@@ -74,7 +74,7 @@ class bibdb:
 
     def addAuxFiles (self, formattemplate, tag, verbose=True, removeIfUnavailable=True):
         """ check available auxiliary files like pdfs or teaser images """
-        for k in self.reflist.keys():
+        for k in self.reflist:
             fname = formattemplate % ( k )
             if os.path.isfile( fname ):
                 if verbose:
