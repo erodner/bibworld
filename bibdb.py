@@ -36,11 +36,17 @@ class bibdb:
                 return True
         return False
 
-    def update(self, refs):
+    def update(self, refs, join_fields=set()):
         """ update the references with the given dictionary """
         for k in refs:
             if k in self.reflist:
-                self.reflist[k].update(refs[k])
+                # self.reflist[k].update(refs[k])
+                for f in refs[k]:
+                    if f in self.reflist[k] and f in join_fields:
+                        self.reflist[k][f] += ", " + refs[k][f]
+                        print k, self.reflist[k][f]
+                    else:
+                        self.reflist[k][f] = refs[k][f]
             else:
                 self.reflist[k] = dict(refs[k])
 

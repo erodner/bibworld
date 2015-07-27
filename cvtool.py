@@ -43,6 +43,8 @@ for k in refs:
 
         if re.search('OGRW', p['booktitle'], re.IGNORECASE):
             bins['nonpapers'].append(k)
+        elif re.search('DGMP', p['booktitle'], re.IGNORECASE):
+            bins['nonpapers'].append(k)
         else:
             bins['papers'].append(k)
     else:
