@@ -33,6 +33,8 @@ for k in refs:
     if p['type']=='book':
         bins['books'].append(k)
     elif p['type']=='article':
+        if not 'journal' in p:
+            raise Exception("{} has no journal field".format(k))
         if re.search('arxiv', p['journal'], re.IGNORECASE):
             bins['nonpapers'].append(k)
         else:
