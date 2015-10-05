@@ -34,7 +34,7 @@ for index, bibfile in enumerate(args.bibfiles):
                     del refs[k][f]
     else:
         refs = mybib.getReferences()
-    mergebib.update(refs)
+    mergebib.update(refs, join_fields = set(['note']))
 
 mergebib.write ( args.out )
 
