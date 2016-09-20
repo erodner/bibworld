@@ -26,7 +26,7 @@ oldstamp = None
 
 # fixed settings
 # bibtex keys that will be exported and provided in the downloaded bibtex keys
-exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year', 'volume', 'number'}
+exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year', 'volume', 'number', 'doi'}
 
 """ server initialization (loading bibtex keys and setting up the cache) """
 def init():
