@@ -1,0 +1,53 @@
+<meta charset="utf-8"> 
+<html>
+<head>
+<title>Publications</title>
+</head>
+<body>
+
+
+{% for group in refs.values()|groupby(attribute='year')|reverse %}
+    <h2>{{ group.grouper }}</h2>
+    {% for item in group.list %}
+    	<br />
+    	<br />
+        {% if item.type=='inproceedings' %}
+          <span class=bibauthor>{{ item.author }}.</span>
+	      <span class=bibtitle>
+          {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}</span>
+          <br />
+          <span class=bibvenue>{{ item.booktitle }}.</span>
+          {% if item.pages %}
+          <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
+          {% endif %}
+          <span class=bibyear>{{ item.year }}.</span>
+        {% elif item.type=='article' %}
+          <span class=bibauthor>{{ item.author }}.</span>
+          <span class=bibtitle>
+          {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}</span>
+          <br />
+          <span class=bibvenue>{{ item.journal }}.</span>
+          {% if item.volume and item.number and item.pages %}
+          <span class=bibpages>{{ item.volume }}({{ item.number }}):{{ item.pages|replace("--","-") }}</span>
+          {% else %}
+          {% if item.pages %}
+          <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
+          {% endif %}
+          {% endif %}
+          <span class=bibyear>{{ item.year }}.</span>
+        {% else %}
+          <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}</span> (<span class=bibyear>{{ item.year }}</span>)
+        {% endif %}
+	{% if 'ward' in item.note %}
+		<span class=awardnote> {{ item.note }}</span>
+	{% else %}	
+		{% if item.note %}
+		<span class=note> {{ item.note }}</span>
+		{% endif %}
+	{% endif %}
+    {% endfor %}
+{% endfor %}
+
+</body>
+
+</html>
