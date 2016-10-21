@@ -20,23 +20,23 @@ python bib2template.py --engine jinja2 -b mypublications.bib -t example-template
 ```
 
 The static interface of bibworld is limited and we strongly recommend the dynamic interface with flask and a proper webserver. In the default setting,
-bibworld searches for teaser images and pdf documents in a predefined directory (``/home/dbv/publications/`` for our case). The PDF file names have to be set according to the
-BibTeX identification strings, e.g., ``Rodner09:LFE`` results in ``Rodner09:LFE.pdf``. Furthermore, the standard template ``biborblist.html`` searches for teaser images, e.g., for
-the BibTeX entry ``Rodner09:LFE`` the teaser image ``Rodner09:LFE.pdf.teaser.png`` will be shown if it is available.
+bibworld searches for teaser images and pdf documents in a predefined directory (`/home/dbv/publications/` for our case). The PDF file names have to be set according to the
+BibTeX identification strings, e.g., `Rodner09:LFE` results in `Rodner09:LFE.pdf`. Furthermore, the standard template `biborblist.html` searches for teaser images, e.g., for
+the BibTeX entry `Rodner09:LFE` the teaser image `Rodner09:LFE.pdf.teaser.png` will be shown if it is available.
 We recommend to use bibworld together with a git repository containing the BibTeX file itself, which allows for proper version control.
 
 Further features:
-* You can access the publications of single authors for example by ``http://yourwebserverurl/author/Rodner`` searching for publications with the text Rodner in the authors field
-* Publications of single years: ``http://yourwebserverurl/year/2013``
-* Teaser images: ``http://yourwebserverurl/teaser/Rodner09:LFE(.png)
-* PDF documents: ``http://yourwebserverurl/pdf/Rodner09:LFE(.pdf)
-* Supplementary PDF documents: ``http://yourwebserverurl/supplementary/Rodner09:LFE(.pdf)
-* Presentation slides: ``http://yourwebserverurl/presentation/Rodner09:LFE(.pdf)
-* Refresh database: ``http://yourwebserverurl/pdf/Rodner09:LFE`` (this feature is still experiment and requires a bibtex file directly in the top level of a git repo)
-* Search for terms: ``http://yourwebserverurl/search/Erik`` this searches for Erik in every field of a BibTeX item, you can also specify regular expressions here
-* Search for terms in specific fields: ``http://yourwebserverurl/searchbyfield/title/Gaussian%20Process`` this searches for the text ``Gaussian Process`` only in the field ``title``
-* Plain BibTeX entries: ``http://yourwebserverurl/bib/Rodner09:LFE`` (only a certain subset of the keys will be exported as specified in the source code: ``exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year'}``
-* Plain BibTeX entries for a search result: ``http://yourwebserverurl/bibsearch/Rodner``
+* You can access the publications of single authors for example by `http://yourwebserverurl/author/Rodner` searching for publications with the text Rodner in the authors field
+* Publications of single years: `http://yourwebserverurl/year/2013`
+* Teaser images: `http://yourwebserverurl/teaser/Rodner09:LFE(.png)`
+* PDF documents: `http://yourwebserverurl/pdf/Rodner09:LFE(.pdf)`
+* Supplementary PDF documents: `http://yourwebserverurl/supplementary/Rodner09:LFE(.pdf)`
+* Presentation slides: `http://yourwebserverurl/presentation/Rodner09:LFE(.pdf)`
+* Refresh database: `http://yourwebserverurl/pdf/Rodner09:LFE` (this feature is still experiment and requires a bibtex file directly in the top level of a git repo)
+* Search for terms: `http://yourwebserverurl/search/Erik` this searches for Erik in every field of a BibTeX item, you can also specify regular expressions here
+* Search for terms in specific fields: `http://yourwebserverurl/searchbyfield/title/Gaussian%20Process` this searches for the text `Gaussian Process` only in the field `title`
+* Plain BibTeX entries: `http://yourwebserverurl/bib/Rodner09:LFE` (only a certain subset of the keys will be exported as specified in the source code: `exported_bibkeys = {'title', 'author', 'booktitle', 'pages', 'journal', 'year'}`
+* Plain BibTeX entries for a search result: `http://yourwebserverurl/bibsearch/Rodner`
 
 Templates
 --------------------------------------------
