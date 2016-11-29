@@ -11,11 +11,11 @@ import json
 # Get the BibTeX and template file names
 parser = argparse.ArgumentParser()
 parser.add_argument('-b', help='Source Bibtex file', required=True)
-parser.add_argument('-t', help='HTML template file', required=True)
-parser.add_argument('-o', help='HTML output', default='out.html')
+parser.add_argument('-t', help='Template file', required=True)
+parser.add_argument('-o', help='Output', default='out.html')
 parser.add_argument('-p', help='PDF and teaser directory', default='.')
 parser.add_argument('-r', help='Root URL', default='')
-parser.add_argument('--engine', help='Template engine being used', default='jabref')
+parser.add_argument('--engine', help='Template engine being used', default='jinja')
 parser.add_argument('--query', help='Query in JSON format', default=None)
 parser.add_argument('--staticroot', help='Directory for static files that will be specified in the output', default="")
 args = parser.parse_args()
@@ -27,8 +27,6 @@ outfn = args.o
 # derive template directory from templatefile
 templatedir = os.path.dirname ( templatefile )
 templatename = os.path.basename ( templatefile )
-m = re.search( '^([\w-]+)\.', templatename )
-templatename = m.group(1)
 
 mybib = bibdb()
 mybib.readFromBibTex ( bibfile )
@@ -49,12 +47,10 @@ else:
     with open(args.query,'r') as f:
         jsonquery = json.load(f)
 
-print jsonquery
-
 refs = mybib.getReferences(**jsonquery)
 print "Number of publications: ", len(refs)
 
-print "Writing HTML output to", outfn
+print "Writing output to", outfn
 if args.engine=='jabref':
     tengjabref.bib2html( refs, outfn, templatedir, templatename )
 else:
