@@ -4,6 +4,7 @@
 <title>Publications</title>
 <link href="{{ url_for('static', filename='bib.css') }}" rel="stylesheet" type="text/css">
 <script src="{{ url_for('static', filename='bib.js') }}"></script>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
 </head>
 <body>
 
@@ -16,7 +17,7 @@
         <table>
         <td width=80px>
         {% if item.teaser %}
-          <img width=70px class=teaserimg src="/teaser/{{ item.id }}">
+          <img width=70px class=teaserimg src="/bibworld/teaser/{{ item.id }}">
         {% endif %}
         </td>
      
@@ -24,7 +25,7 @@
         {% if item.type=='inproceedings' %}
           <span class=bibauthor>{{ item.author }}.</span>
 	  <span class=bibtitle>
-          {% if item.pdf %}<a href="/pdf/{{ item.id }}">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          {% if item.pdf %}<a href="/bibworld/pdf/{{ item.id }}">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
           <br />
           <span class=bibvenue>{{ item.booktitle }}.</span>
           {% if item.pages %}
@@ -34,7 +35,7 @@
         {% elif item.type=='article' %}
           <span class=bibauthor>{{ item.author }}.</span>
           <span class=bibtitle>
-          {% if item.pdf %}<a href="/pdf/{{ item.id }}">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          {% if item.pdf %}<a href="/bibworld/pdf/{{ item.id }}">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
           <br />
           <span class=bibvenue>{{ item.journal }}.</span>
           {% if item.pages %}
@@ -44,9 +45,9 @@
         {% else %}
           <span class=bibauthor>{{ item.author }}.</span><span class=bibtitle>{{ item.title }}</span> (<span class=bibyear>{{ item.year }}</span>)
         {% endif %}
-        <a href="/bib/{{ item.id }}" onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
+        <a href="/bibworld/bib/{{ item.id }}" onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
         {% if item.pdf %}
-        <a href="/pdf/{{ item.id }}"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf" title="pdf"/></a>
+        <a href="/bibworld/pdf/{{ item.id }}"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf" title="pdf"/></a>
         {% endif %}
 
         {% if item.abstract %}

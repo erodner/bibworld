@@ -9,10 +9,9 @@ import subprocess
 # initialize cache 
 from werkzeug.contrib.cache import SimpleCache
 cache = SimpleCache()
-
 # parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('-b', help='Source Bibtex file', default='/usr/local/virtualenvs/bibworld/bib/paper.bib')
+parser.add_argument('-b', help='Source Bibtex file', default='/srv/www/webuser/bib/paper.bib')
 parser.add_argument('--htmlroot', help='Template folder', default='example-template-jinja2')
 parser.add_argument('-t', help='Default template', default='biborblist.html')
 parser.add_argument('-p', help='PDF directory', default='/home/dbv/publications/')
@@ -45,8 +44,12 @@ def init():
 init()
 
 # start Flask server
-app = Flask(__name__, template_folder=args.htmlroot, static_folder=args.htmlroot)
-
+app = Flask(
+  __name__, 
+  template_folder=args.htmlroot, 
+  static_folder=args.htmlroot,
+  static_url_path="/bibworldstatic",
+)
 #
 # Main FLASK functions
 #
