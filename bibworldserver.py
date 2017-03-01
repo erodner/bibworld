@@ -6,7 +6,7 @@ import argparse
 import os
 import subprocess
 
-# initialize cache 
+# initialize cache
 from werkzeug.contrib.cache import SimpleCache
 cache = SimpleCache()
 # parse arguments
@@ -45,10 +45,10 @@ init()
 
 # start Flask server
 app = Flask(
-  __name__, 
-  template_folder=args.htmlroot, 
+  __name__,
+  template_folder=args.htmlroot,
   static_folder=args.htmlroot,
-  static_url_path="/bibworldstatic",
+  static_url_path="/static",
 )
 #
 # Main FLASK functions
@@ -130,7 +130,7 @@ def print_bibtex(bibid):
         mybib = cache.get('mybib')
 
     return mybib.getBibtexEntry( bibid, newlinestr='<br>', exported_keys=exported_bibkeys )
- 
+
 @app.route('/teaser/<bibid>')
 def print_teaserimage(bibid):
     mybib = cache.get('mybib')
@@ -138,7 +138,7 @@ def print_teaserimage(bibid):
         init()
         mybib = cache.get('mybib')
 
-    ref = mybib.getReference(bibid) 
+    ref = mybib.getReference(bibid)
     if 'teaser' in ref:
         return send_file( ref['teaser'] )
     else:
@@ -152,7 +152,7 @@ def print_pdf(bibid):
         init()
         mybib = cache.get('mybib')
 
-    ref = mybib.getReference(bibid) 
+    ref = mybib.getReference(bibid)
     if 'pdf' in ref:
         return send_file( ref['pdf'] )
     else:
@@ -173,12 +173,12 @@ def refresh():
         print "Error updating git repo at %s" % (gitdir)
         gitmsg = "Exception: %s" % (e)
 
- 
+
     #    bashCommand = "export HOME=/usr/local/virtualenvs/bibworld/fakehome/; cd %s; git pull origin master" % (gitdir)
     #	 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     # 	 gitmsg = process.communicate()[0]
-   
-    # try:	 
+
+    # try:
     #	gitmsg = subprocess.check_output(['git', '--git-dir', gitdir, 'pull', 'origin', 'master'], shell=True)
     # except Exception, e:
     #	print e
@@ -187,7 +187,7 @@ def refresh():
     print "gitmsg: %s" % (gitmsg)
 
     # reread everything
-    init()   
+    init()
 
     return flask.redirect('/')
 
