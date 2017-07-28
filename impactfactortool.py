@@ -64,7 +64,7 @@ for k in refs:
                     break
 
         if not found:
-            print "Unknown: {}".format(identifier)
+            print u"Unknown: {}".format(identifier)
 
 if not args.notesbib is None:
     notesbib.close()

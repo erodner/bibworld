@@ -44,7 +44,6 @@ class bibdb:
                 for f in refs[k]:
                     if f in self.reflist[k] and f in join_fields:
                         self.reflist[k][f] += ", " + refs[k][f]
-                        print k, self.reflist[k][f]
                     else:
                         self.reflist[k][f] = refs[k][f]
             else:
@@ -209,7 +208,14 @@ class bibdb:
                     if verbose:
                         print "No BibTex ID given or error during parsing"
 
-                #print "Adding %s" % (bibid)
+                # fuse journal and inprocessings to venue
+                venue_keys = ["booktitle", "journal"]
+                for venue_key in venue_keys:
+                    if venue_key in keydict:
+                        keydict["venue"] = keydict[venue_key]
+
+                # reject meta bibtex entries and 
+                # the ones not containing a year
                 rejected = False
 
                 if not rejected:
