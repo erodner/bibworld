@@ -1,15 +1,18 @@
-Bibworld - easy publication lists with flask
---------------------------------------------
+# Bibworld - easy publication lists with flask
 
 Bibworld is a tool to create HTML publications lists from bibtex files and directories with corresponding PDFs and teaser images.
 
-Author: Erik Rodner (Erik.Rodner (at) uni-jena.de)
+Author: Erik Rodner (http://www.erodner.de)
 
 The dynamic component of bibworld is based on flask (http://flask.pocoo.org/docs/) and Jinja2 (http://jinja.pocoo.org/docs/).
 
+# Demo system
 
-Using bibworld
---------------------------------------------
+The computer vision group in Jena is running bibworld to list and organize their publications at http://hera.inf-cv.uni-jena.de:6680/. I personally use the static interface for my page at http://www.erodner.de.
+
+
+
+# Using bibworld
 
 Bibworld can be used to create static HTML files of your publication list or dynamic webpages. 
 To create a static webpage the script bib2template.py can be used:
@@ -27,10 +30,10 @@ We recommend to use bibworld together with a git repository containing the BibTe
 Further features:
 * You can access the publications of single authors for example by `http://yourwebserverurl/author/Rodner` searching for publications with the text Rodner in the authors field
 * Publications of single years: `http://yourwebserverurl/year/2013`
-* Teaser images: `http://yourwebserverurl/teaser/Rodner09:LFE(.png)
-* PDF documents: `http://yourwebserverurl/pdf/Rodner09:LFE(.pdf)
-* Supplementary PDF documents: `http://yourwebserverurl/supplementary/Rodner09:LFE(.pdf)
-* Presentation slides: `http://yourwebserverurl/presentation/Rodner09:LFE(.pdf)
+* Teaser images: `http://yourwebserverurl/teaser/Rodner09:LFE(.png)`
+* PDF documents: `http://yourwebserverurl/pdf/Rodner09:LFE(.pdf)`
+* Supplementary PDF documents: `http://yourwebserverurl/supplementary/Rodner09:LFE(.pdf)`
+* Presentation slides: `http://yourwebserverurl/presentation/Rodner09:LFE(.pdf)`
 * Refresh database: `http://yourwebserverurl/pdf/Rodner09:LFE` (this feature is still experiment and requires a bibtex file directly in the top level of a git repo)
 * Search for terms: `http://yourwebserverurl/search/Erik` this searches for Erik in every field of a BibTeX item, you can also specify regular expressions here
 * Search for terms in specific fields: `http://yourwebserverurl/searchbyfield/title/Gaussian%20Process` this searches for the text `Gaussian Process` only in the field `title`

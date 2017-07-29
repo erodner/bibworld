@@ -1,0 +1,12 @@
+{%- for group in refs.values()|groupby(attribute='year')|reverse -%}
+{%- for item in group.list -%}
+{%- if item.type=='inproceedings' %}
+{{ item.year }};{{ item.author }};{{ item.title }};{{ item.booktitle }}
+{%- elif item.type=='article' %}
+{{ item.year }};{{ item.author }};{{ item.title }};{{ item.journal }}
+{%- else %}
+{{ item.year }};{{ item.author }};{{ item.title }};Unknown
+{%- endif -%}
+{%- endfor -%}
+{%- endfor -%}
+
