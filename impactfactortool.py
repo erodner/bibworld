@@ -16,7 +16,7 @@ parser.add_argument('-w', '--wordforip', help='Word used for impact factor', def
 args = parser.parse_args()
 
 mybib = bibdb()
-mybib.readFromBibTex ( args.bibfile )
+mybib.readFromBibTex ( args.bibfile, verbose=True )
 
 if args.query is None:
     jsonquery = {}
@@ -34,7 +34,8 @@ sumfactors_per_year = {}
 if not args.notesbib is None:
     notesbib = open(args.notesbib, 'w')
 
-for k in refs:
+for k in sorted(refs.keys()):
+    print "processing {}".format(k)
     bib = refs[k]
     if not 'year' in bib:
         continue
@@ -65,6 +66,9 @@ for k in refs:
 
         if not found:
             print u"Unknown: {}".format(identifier)
+    else:
+        print k, "is out of year range"
+
 
 if not args.notesbib is None:
     notesbib.close()
