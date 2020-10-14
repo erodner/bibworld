@@ -54,7 +54,7 @@ for k in refs:
     else:
         bins["nonpapers"].append(k)
 
-print "Writing to {}".format(args.out)
+print("Writing to {}".format(args.out))
 with open(args.out, "w") as f:
     for category in bins:
         f.write(

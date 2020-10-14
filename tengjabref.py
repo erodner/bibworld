@@ -20,8 +20,8 @@ def printtemplate(outf, p, fn):
 
 
 def bib2html(refs, outfn, templatedir, templatename):
-    print "Template dir: ", templatedir
-    print "Template name: ", templatename
+    print("Template dir: {}".format(templatedir))
+    print("Template name: {}".format(templatename))
 
     # open header
     with open(outfn, "w") as outf:

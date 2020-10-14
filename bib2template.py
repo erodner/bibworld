@@ -53,9 +53,9 @@ else:
         jsonquery = json.load(f)
 
 refs = mybib.getReferences(**jsonquery)
-print "Number of publications: ", len(refs)
+print("Number of publications: {}".format(len(refs)))
 
-print "Writing output to", outfn
+print("Writing output to {}".format(outfn))
 if args.engine == "jabref":
     tengjabref.bib2html(refs, outfn, templatedir, templatename)
 else:

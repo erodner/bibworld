@@ -84,7 +84,7 @@ class bibdb:
             fname = formattemplate % (k)
             if os.path.isfile(fname):
                 if verbose:
-                    print "Adding %s document: %s" % (tag, fname)
+                    print("Adding {} document: {}".format(tag, fname))
                 self.reflist[k][tag] = fname
             elif removeIfUnavailable:
                 # rather remove the tag when available
@@ -126,7 +126,7 @@ class bibdb:
         metabibkeys = {"jabref-meta"}
 
         if verbose:
-            print "Reading references from: ", bibfile
+            print("Reading references from: {}".format(bibfile))
 
         with open(bibfile, "r") as f:
             datalist = f.readlines()
@@ -137,21 +137,22 @@ class bibdb:
             # Convert a list into a string
             data = u""
             for s in datalist:
-                if re.match("^\s*%", s):
+                if re.match(r"^\s*%", s):
                     continue
-                if re.match("^\s*$", s):
+                if re.match(r"^\s*$", s):
                     continue
 
                 try:
-                    s = unicode(s + " ", errors="ignore")
-                except UnicodeDecodeError, e:
-                    print s
+                    s += " "
+                    # s = s.encode("utf-8", errors="ignore")
+                except UnicodeDecodeError:
+                    print(s)
 
                 if not use_raw_encoding:
-                    s = re.sub(r'\{?\\"o\}?', u"ö", s)
-                    s = re.sub(r'\{?\\"u\}?', u"ü", s)
-                    s = re.sub(r'\{?\\"a\}?', u"ä", s)
-                    s = re.sub(r"\{?\\ss\}?", u"ß", s)
+                    s = re.sub(r'\{?\\"o\}?', "ö", s)
+                    s = re.sub(r'\{?\\"u\}?', "ü", s)
+                    s = re.sub(r'\{?\\"a\}?', "ä", s)
+                    s = re.sub(r"\{?\\ss\}?", "ß", s)
 
                 data += s + u" "
 
@@ -205,7 +206,7 @@ class bibdb:
                     bibid = keydict["id"]
                 else:
                     if verbose:
-                        print "No BibTex ID given or error during parsing"
+                        print("No BibTex ID given or error during parsing")
 
                 # fuse journal and inprocessings to venue
                 venue_keys = ["booktitle", "journal"]
@@ -224,8 +225,10 @@ class bibdb:
                         and keydict["type"] != "bibworldnode"
                     ):
                         if verbose:
-                            print "BibTex entry %s has no year specified and will therefore be ignored!" % (
-                                bibid
+                            print(
+                                "BibTex entry {} has no year specified and will therefore be ignored!".format(
+                                    bibid
+                                )
                             )
                         rejected = True
 

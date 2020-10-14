@@ -5,18 +5,23 @@ from bibdb import bibdb
 import argparse
 import os
 import subprocess
+from os.path import expanduser
+from os.path import join as pjoin
+
+homepath = expanduser("~")
 
 # initialize cache
-from werkzeug.contrib.cache import SimpleCache
+# from werkzeug.contrib.cache import SimpleCache
 
-cache = SimpleCache()
+# cache = SimpleCache()
+mybib = None
 
 # parse arguments
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "-b",
     help="Source Bibtex file",
-    default="/usr/local/virtualenvs/bibworld/bib/paper.bib",
+    default=pjoin(homepath, "publications", "paper.bib"),
 )
 parser.add_argument(
     "--htmlroot", help="Template folder", default="example-template-jinja2"
@@ -49,10 +54,9 @@ exported_bibkeys = {
     "doi",
 }
 
-""" server initialization (loading bibtex keys and setting up the cache) """
-
 
 def init():
+    """ server initialization (loading bibtex keys and setting up the cache) """
     if oldstamp is None or oldstamp > os.path.getmtime(bibfile):
         mybib = bibdb()
         mybib.readFromBibTex(bibfile)
@@ -66,12 +70,12 @@ def init():
         mybib.addAuxFiles(os.path.join(pdfdir, "%s.supplementary.pdf"), "supplementary")
 
         # add the references to the cache
-        cache.set("mybib", mybib, timeout=60 * 60 * 72)
+        # cache.set("mybib", mybib, timeout=60 * 60 * 72)
     else:
-        print "Database is still up to date"
-        cache.set("mybib", mybib, timeout=60 * 60 * 72)
+        print("Database is still up to date")
+        # cache.set("mybib", mybib, timeout=60 * 60 * 72)
 
-    print "Number of publications: ", len(mybib.getReferences())
+    print("Number of publications: {}".format(len(mybib.getReferences())))
 
 
 #
@@ -94,7 +98,7 @@ def webserver_send_file(fn, mimetype):
     response.headers["Cache-Control"] = "no-cache"
     response.headers["Content-Type"] = mimetype
     response.headers["X-Accel-Redirect"] = basefn
-    print "Sending file %s as %s with X-Accel-Direct" % (fn, basefn)
+    print("Sending file {} as {} with X-Accel-Direct".format(fn, basefn))
     return response
 
 
@@ -105,10 +109,10 @@ def webserver_send_file(fn, mimetype):
 @app.route("/all/")
 @app.route("/")
 def start(template=None):
-    mybib = cache.get("mybib")
+    # mybib = cache.get("mybib")
     if mybib is None:
         init()
-        mybib = cache.get("mybib")
+        # mybib = cache.get("mybib")
 
     refs = mybib.getReferences()
     if not template:
@@ -218,7 +222,7 @@ def send_aux_file(bibid, tag, mimetype):
         else:
             return webserver_send_file(ref[tag], mimetype)
     else:
-        print abort(404)
+        print(abort(404))
 
 
 @app.route("/pdf/<bibid>")
@@ -260,21 +264,11 @@ def refresh():
 
         g = git.cmd.Git(gitdir)
         gitmsg = g.pull("origin", "master")
-    except git.GitCommandError, e:
-        print "Error updating git repo at %s" % (gitdir)
-        gitmsg = "Exception: %s" % (e)
+    except git.GitCommandError as e:
+        print("Error updating git repo at {}".format(gitdir))
+        gitmsg = "Exception: {}".format(e)
 
-    #    bashCommand = "export HOME=/usr/local/virtualenvs/bibworld/fakehome/; cd %s; git pull origin master" % (gitdir)
-    # 	 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-    # 	 gitmsg = process.communicate()[0]
-
-    # try:
-    # 	gitmsg = subprocess.check_output(['git', '--git-dir', gitdir, 'pull', 'origin', 'master'], shell=True)
-    # except Exception, e:
-    # 	print e
-    # 	gitmsg = "Exception: %s" % (e)
-
-    print "gitmsg: %s" % (gitmsg)
+    print("gitmsg: {}".format(gitmsg))
 
     oldstamp = None
     # reread everything

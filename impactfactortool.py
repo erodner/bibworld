@@ -41,7 +41,7 @@ if not args.notesbib is None:
     notesbib = open(args.notesbib, "w")
 
 for k in sorted(refs.keys()):
-    print "processing {}".format(k)
+    print("processing {}".format(k))
     bib = refs[k]
     if not "year" in bib:
         continue
@@ -57,7 +57,7 @@ for k in sorted(refs.keys()):
         for f in factors:
             if not identifier is None:
                 if re.search(f, identifier):
-                    print k, identifier, f, factors[f]
+                    print(k, identifier, f, factors[f])
                     found = True
 
                     if not args.notesbib is None:
@@ -74,14 +74,14 @@ for k in sorted(refs.keys()):
                     break
 
         if not found:
-            print u"Unknown: {}".format(identifier)
+            print(u"Unknown: {}".format(identifier))
     else:
-        print k, "is out of year range"
+        print("{} is out of year range".format(k))
 
 
 if not args.notesbib is None:
     notesbib.close()
 
-print "Sum of impact factors: {}".format(sumfactors)
+print("Sum of impact factors: {}".format(sumfactors))
 for y in sumfactors_per_year:
-    print "Sum of impact factors (per year): {} {}".format(y, sumfactors_per_year[y])
+    print("Sum of impact factors (per year): {} {}".format(y, sumfactors_per_year[y]))
