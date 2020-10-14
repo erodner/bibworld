@@ -8,9 +8,7 @@ The dynamic component of bibworld is based on flask (http://flask.pocoo.org/docs
 
 # Demo system
 
-The computer vision group in Jena is running bibworld to list and organize their publications at http://hera.inf-cv.uni-jena.de:6680/. I personally use the static interface for my page at http://www.erodner.de.
-
-
+The computer vision group in Jena is running bibworld to list and organize their publications at http://pub.inf-cv.uni-jena.de/. I personally use the static interface for my page at http://www.erodner.de.
 
 # Using bibworld
 
