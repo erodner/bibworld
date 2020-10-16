@@ -80,6 +80,7 @@ templates = Jinja2Templates(directory=htmlroot)
 #
 @app.get("/", response_class=HTMLResponse)
 def start(request: Request, template: Optional[str] = defaulttemplate):
+    """ root path showing all publications in the database """
     return templates.TemplateResponse(
         template, {"request": request, "refs": mybib.getReferences()}
     )
@@ -89,6 +90,7 @@ def start(request: Request, template: Optional[str] = defaulttemplate):
 def print_author(
     author: str, request: Request, template: Optional[str] = defaulttemplate
 ):
+    """ show only publications of a specific author """
     refs = mybib.getReferences(author=author)
     return templates.TemplateResponse(template, {"request": request, "refs": refs})
 
@@ -97,6 +99,7 @@ def print_author(
 def print_searchfield(
     field: str, term: str, request: Request, template: Optional[str] = defaulttemplate
 ):
+    """ listing publications that contain a term in a given bibtex field """
     refs = mybib.getReferences(field=term)
     return templates.TemplateResponse(template, {"request": request, "refs": refs})
 
@@ -105,18 +108,21 @@ def print_searchfield(
 def print_search(
     term: str, request: Request, template: Optional[str] = defaulttemplate
 ):
+    """ full-text search for publications with a given term """
     refs = mybib.searchReferences(term)
     return templates.TemplateResponse(template, {"request": request, "refs": refs})
 
 
 @app.get("/year/{year}", response_class=HTMLResponse)
 def print_year(year: str, request: Request, template: Optional[str] = defaulttemplate):
+    """ listing all publications of a given year """
     refs = mybib.getReferences(year=year)
     return templates.TemplateResponse(template, {"request": request, "refs": refs})
 
 
 @app.get("/bib/{bibid}", response_class=HTMLResponse)
 def print_bibtex(bibid: str, request: Request):
+    """ printing a raw bibtex entry as HTML """
     return mybib.getBibtexEntry(
         bibid, newlinestr="<br>", exported_keys=exported_bibkeys
     )
@@ -124,6 +130,7 @@ def print_bibtex(bibid: str, request: Request):
 
 @app.get("/bibsearch/{term}", response_class=HTMLResponse)
 def print_bibtexsearch(term: str, request: Request):
+    """ getting raw bibtex entries as a result of a full-text search """
     refs = mybib.searchReferences(term)
     output = ""
     for bibid in refs:
@@ -138,6 +145,7 @@ def print_bibtexsearch(term: str, request: Request):
 
 
 def send_aux_file(bibid, tag, mimetype):
+    """ helper function for sending a given file """
     ref = mybib.getReference(bibid)
     if tag in ref:
         file_location = ref[tag]
@@ -149,26 +157,32 @@ def send_aux_file(bibid, tag, mimetype):
 
 @app.get("/pdf/{bibid}.pdf")
 def print_pdf(bibid: str):
+    """ get the paper pdf """
     return send_aux_file(bibid, "pdf", "application/pdf")
 
 
 @app.get("/teaser/{bibid}")
 def print_teaser(bibid: str):
+    """ get the teaser image of the publication """
     return send_aux_file(bibid, "teaser", "image/png")
 
 
 @app.get("/presentation/{bibid}.pdf")
 def print_presentation(bibid: str):
+    """ get the presentation pdf of a given publication """
     return send_aux_file(bibid, "presentation", "application/pdf")
 
 
 @app.get("/supplementary/{bibid}.pdf")
 def print_supplementary(bibid: str):
+    """ get the supplementary material of a given publication """
     return send_aux_file(bibid, "supplementary", "application/pdf")
 
 
 @app.get("/refresh")
 def refresh():
+    """ try to refresh and re-read the database by git """
+
     # try to perform a git update before the refresh
     gitdir = os.path.dirname(bibfile)
 
@@ -182,16 +196,7 @@ def refresh():
         print("Git error: {} for {}".format(e, gitdir))
 
     # reread everything
-    loaddb()
+    mybib = loaddb()
 
     response = RedirectResponse(url="/")
     return response
-
-
-#############################################################
-
-# from bibgraph import getGraphJSON
-# app.jinja_env.globals.update(getgraph=getGraphJSON)
-
-# if __name__ == "__main__":
-#    app.run(host="0.0.0.0", debug=True)
