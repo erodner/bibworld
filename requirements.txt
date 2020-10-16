@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+gitpython
+aiofiles>=0.5.0
