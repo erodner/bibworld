@@ -86,10 +86,13 @@ class bibdb:
                 if verbose:
                     print("Adding {} document: {}".format(tag, fname))
                 self.reflist[k][tag] = fname
-            elif removeIfUnavailable:
-                # rather remove the tag when available
-                if tag in self.reflist[k]:
-                    del self.reflist[k][tag]
+            else:
+                # if verbose:
+                #    print("Unable to find {}".format(fname))
+                if removeIfUnavailable:
+                    # rather remove the tag when available
+                    if tag in self.reflist[k]:
+                        del self.reflist[k][tag]
 
     def write(self, filename):
         with open(filename, "w") as f:

@@ -1,44 +1,25 @@
-# Documentation of flask at http://flask.pocoo.org/docs/flask-docs.pdf
-import flask
-from flask import Flask, make_response, abort, send_file, request
-from bibdb import bibdb
-import argparse
 import os
-import subprocess
 from os.path import expanduser
 from os.path import join as pjoin
 
+import fastapi
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from typing import Optional
+from starlette.responses import FileResponse
+
+from bibdb import bibdb
+
 homepath = expanduser("~")
 
-# initialize cache
-# from werkzeug.contrib.cache import SimpleCache
-
-# cache = SimpleCache()
 mybib = None
 
-# parse arguments
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "-b",
-    help="Source Bibtex file",
-    default=pjoin(homepath, "publications", "paper.bib"),
-)
-parser.add_argument(
-    "--htmlroot", help="Template folder", default="example-template-jinja2"
-)
-parser.add_argument("-t", help="Default template", default="biborblist.html")
-parser.add_argument("-p", help="PDF directory", default="/home/publications/")
-parser.add_argument(
-    "--noxaccel",
-    help="do not use X-Accel-Redirect (apache required)",
-    action="store_true",
-)
-args = parser.parse_args()
-bibfile = args.b
-pdfdir = args.p
-defaulttemplate = args.t
-use_x_accel_redirect = not args.noxaccel
-oldstamp = None
+htmlroot = "example-template-jinja2"
+bibfile = pjoin(homepath, "publications", "paper.bib")
+pdfdir = pjoin(homepath, "publications-pdfs")
+defaulttemplate = "erikslist.html"
 
 # fixed settings
 # bibtex keys that will be exported and provided in the downloaded bibtex keys
@@ -55,147 +36,94 @@ exported_bibkeys = {
 }
 
 
-def init():
+def loaddb(oldstamp=None):
     """ server initialization (loading bibtex keys and setting up the cache) """
-    if oldstamp is None or oldstamp > os.path.getmtime(bibfile):
-        mybib = bibdb()
-        mybib.readFromBibTex(bibfile)
-        mybib.addAuxFiles(os.path.join(pdfdir, "%s.pdf"), "pdf")
-        # compatibility for the old format
-        mybib.addAuxFiles(os.path.join(pdfdir, "%s.pdf.teaser.png"), "teaser")
-        mybib.addAuxFiles(
-            os.path.join(pdfdir, "%s.teaser.png"), "teaser", removeIfUnavailable=False
-        )
-        mybib.addAuxFiles(os.path.join(pdfdir, "%s.presentation.pdf"), "presentation")
-        mybib.addAuxFiles(os.path.join(pdfdir, "%s.supplementary.pdf"), "supplementary")
+    mybib = bibdb()
+    mybib.readFromBibTex(bibfile)
+    mybib.addAuxFiles(os.path.join(pdfdir, "%s.pdf"), "pdf")
+    # compatibility for the old format
+    mybib.addAuxFiles(os.path.join(pdfdir, "%s.pdf.teaser.png"), "teaser")
+    mybib.addAuxFiles(
+        os.path.join(pdfdir, "%s.teaser.png"), "teaser", removeIfUnavailable=False
+    )
+    mybib.addAuxFiles(os.path.join(pdfdir, "%s.presentation.pdf"), "presentation")
+    mybib.addAuxFiles(os.path.join(pdfdir, "%s.supplementary.pdf"), "supplementary")
 
-        # add the references to the cache
-        # cache.set("mybib", mybib, timeout=60 * 60 * 72)
-    else:
-        print("Database is still up to date")
-        # cache.set("mybib", mybib, timeout=60 * 60 * 72)
-
-    print("Number of publications: {}".format(len(mybib.getReferences())))
+    return mybib
 
 
-#
-# server initialization
-#
+mybib = loaddb()
 
-# init server
-init()
+# FastAPI initialization
 
-# start Flask server
-app = Flask(__name__, template_folder=args.htmlroot, static_folder=args.htmlroot)
+app = FastAPI()
+
+app.mount("/static", StaticFiles(directory=htmlroot), name="static")
+templates = Jinja2Templates(directory=htmlroot)
 
 #
 # Helper functions
 #
-def webserver_send_file(fn, mimetype):
-    # http://stackoverflow.com/questions/5410255/preferred-method-for-downloading-a-file-generated-on-the-fly-in-flask
-    basefn = fn.replace(pdfdir, "/staticfiles/")
-    response = make_response()
-    response.headers["Cache-Control"] = "no-cache"
-    response.headers["Content-Type"] = mimetype
-    response.headers["X-Accel-Redirect"] = basefn
-    print("Sending file {} as {} with X-Accel-Direct".format(fn, basefn))
-    return response
+# def webserver_send_file(fn, mimetype):
+#    # http://stackoverflow.com/questions/5410255/preferred-method-for-downloading-a-file-generated-on-the-fly-in-flask
+#    basefn = fn.replace(pdfdir, "/staticfiles/")
+#    response = make_response()
+#    response.headers["Cache-Control"] = "no-cache"
+#    response.headers["Content-Type"] = mimetype
+#    response.headers["X-Accel-Redirect"] = basefn
+#    print("Sending file {} as {} with X-Accel-Direct".format(fn, basefn))
+#    return response
 
 
 #
-# Main FLASK functions
+# API Definition
 #
-@app.route("/all/<template>")
-@app.route("/all/")
-@app.route("/")
-def start(template=None):
-    # mybib = cache.get("mybib")
-    if mybib is None:
-        init()
-        # mybib = cache.get("mybib")
-
-    refs = mybib.getReferences()
-    if not template:
-        template = defaulttemplate
-    return flask.render_template(template, refs=refs)
+@app.get("/", response_class=HTMLResponse)
+def start(request: Request, template: Optional[str] = defaulttemplate):
+    return templates.TemplateResponse(
+        template, {"request": request, "refs": mybib.getReferences()}
+    )
 
 
-@app.route("/author/<author>")
-@app.route("/author/<author>/<template>")
-def print_author(author, template=None):
-    mybib = cache.get("mybib")
-    if mybib is None:
-        init()
-        mybib = cache.get("mybib")
-
+@app.get("/author/{author}", response_class=HTMLResponse)
+def print_author(
+    author: str, request: Request, template: Optional[str] = defaulttemplate
+):
     refs = mybib.getReferences(author=author)
-    if not template:
-        template = defaulttemplate
-    return flask.render_template(template, refs=refs)
+    return templates.TemplateResponse(template, {"request": request, "refs": refs})
 
 
-@app.route("/searchbyfield/<field>/<term>")
-@app.route("/searchbyfield/<field>/<term>/<template>")
-def print_searchfield(field, term, template=None):
-    mybib = cache.get("mybib")
-    if mybib is None:
-        init()
-        mybib = cache.get("mybib")
-
-    kwargs = {field: term}
-    refs = mybib.getReferences(**kwargs)
-    if not template:
-        template = defaulttemplate
-    return flask.render_template(template, refs=refs)
+@app.get("/searchbyfield/{field}/{term}", response_class=HTMLResponse)
+def print_searchfield(
+    field: str, term: str, request: Request, template: Optional[str] = defaulttemplate
+):
+    refs = mybib.getReferences(field=term)
+    return templates.TemplateResponse(template, {"request": request, "refs": refs})
 
 
-@app.route("/search/<term>")
-@app.route("/search/<term>/<template>")
-def print_search(term, template=None):
-    mybib = cache.get("mybib")
-    if mybib is None:
-        init()
-        mybib = cache.get("mybib")
-
+@app.get("/search/{term}", response_class=HTMLResponse)
+def print_search(
+    term: str, request: Request, template: Optional[str] = defaulttemplate
+):
     refs = mybib.searchReferences(term)
-    if not template:
-        template = defaulttemplate
-    return flask.render_template(template, refs=refs)
+    return templates.TemplateResponse(template, {"request": request, "refs": refs})
 
 
-@app.route("/year/<year>")
-@app.route("/year/<year>/<template>")
-def print_year(year, template=None):
-    mybib = cache.get("mybib")
-    if mybib is None:
-        init()
-        mybib = cache.get("mybib")
-
+@app.get("/year/{year}", response_class=HTMLResponse)
+def print_year(year: str, request: Request, template: Optional[str] = defaulttemplate):
     refs = mybib.getReferences(year=year)
-    if not template:
-        template = defaulttemplate
-    return flask.render_template(template, refs=refs)
+    return templates.TemplateResponse(template, {"request": request, "refs": refs})
 
 
-@app.route("/bib/<bibid>")
-def print_bibtex(bibid):
-    mybib = cache.get("mybib")
-    if mybib is None:
-        init()
-        mybib = cache.get("mybib")
-
+@app.get("/bib/{bibid}", response_class=HTMLResponse)
+def print_bibtex(bibid: str, request: Request):
     return mybib.getBibtexEntry(
         bibid, newlinestr="<br>", exported_keys=exported_bibkeys
     )
 
 
-@app.route("/bibsearch/<term>")
-def print_bibtexsearch(term):
-    mybib = cache.get("mybib")
-    if mybib is None:
-        init()
-        mybib = cache.get("mybib")
-
+@app.get("/bibsearch/{term}", response_class=HTMLResponse)
+def print_bibtexsearch(term: str, request: Request):
     refs = mybib.searchReferences(term)
     output = ""
     for bibid in refs:
@@ -210,79 +138,60 @@ def print_bibtexsearch(term):
 
 
 def send_aux_file(bibid, tag, mimetype):
-    mybib = cache.get("mybib")
-    if mybib is None:
-        init()
-        mybib = cache.get("mybib")
-
     ref = mybib.getReference(bibid)
     if tag in ref:
-        if not use_x_accel_redirect:
-            return send_file(ref[tag], cache_timeout=60)
-        else:
-            return webserver_send_file(ref[tag], mimetype)
+        file_location = ref[tag]
+        return FileResponse(file_location, media_type=mimetype)
+
     else:
-        print(abort(404))
+        raise HTTPException(status_code=404, detail="Item not found")
 
 
-@app.route("/pdf/<bibid>")
-@app.route("/pdf/<bibid>.pdf")
-def print_pdf(bibid):
+@app.get("/pdf/{bibid}.pdf")
+def print_pdf(bibid: str):
     return send_aux_file(bibid, "pdf", "application/pdf")
 
 
-@app.route("/teaser/<bibid>")
-@app.route("/teaser/<bibid>.png")
-def print_teaser(bibid):
+@app.get("/teaser/{bibid}")
+def print_teaser(bibid: str):
     return send_aux_file(bibid, "teaser", "image/png")
 
 
-@app.route("/presentation/<bibid>")
-@app.route("/presentation/<bibid>.pdf")
-def print_presentation(bibid):
+@app.get("/presentation/{bibid}.pdf")
+def print_presentation(bibid: str):
     return send_aux_file(bibid, "presentation", "application/pdf")
 
 
-@app.route("/supplementary/<bibid>")
-@app.route("/supplementary/<bibid>.pdf")
-def print_supplementary(bibid):
+@app.get("/supplementary/{bibid}.pdf")
+def print_supplementary(bibid: str):
     return send_aux_file(bibid, "supplementary", "application/pdf")
 
 
-@app.route("/refresh")
+@app.get("/refresh")
 def refresh():
     # try to perform a git update before the refresh
     gitdir = os.path.dirname(bibfile)
-
-    gitmsg = "No git installed or git error. Updating locally only from %s/%s." % (
-        bibfile,
-        gitdir,
-    )
 
     try:
         import git
 
         g = git.cmd.Git(gitdir)
         gitmsg = g.pull("origin", "master")
+        print("Git update successfull: {}".format(gitmsg))
     except git.GitCommandError as e:
-        print("Error updating git repo at {}".format(gitdir))
-        gitmsg = "Exception: {}".format(e)
+        print("Git error: {} for {}".format(e, gitdir))
 
-    print("gitmsg: {}".format(gitmsg))
-
-    oldstamp = None
     # reread everything
-    init()
+    loaddb()
 
-    return flask.redirect("/")
+    response = RedirectResponse(url="/")
+    return response
 
 
 #############################################################
 
-from bibgraph import getGraphJSON
+# from bibgraph import getGraphJSON
+# app.jinja_env.globals.update(getgraph=getGraphJSON)
 
-app.jinja_env.globals.update(getgraph=getGraphJSON)
-
-if __name__ == "__main__":
-    use_x_accel_redirect = False
-    app.run(debug=True)
+# if __name__ == "__main__":
+#    app.run(host="0.0.0.0", debug=True)

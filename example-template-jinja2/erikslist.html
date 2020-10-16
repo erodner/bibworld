@@ -1,112 +1,123 @@
-<meta charset="utf-8"> 
+<meta charset="utf-8">
 <html>
+
 <head>
-<title>Publications</title>
-<link href="{{ url_for('static', filename='bib_eriks.css') }}" rel="stylesheet" type="text/css">
-<script src="{{ url_for('static', filename='bib.js') }}"></script>
-<link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/style.css" />
-<link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/table.css" />
-<link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/span.css" />
+  <title>Publications</title>
+  <link href="{{ url_for('static', path='bib_eriks.css') }}" rel="stylesheet" type="text/css">
+  <script src="{{ url_for('static', path='bib.js') }}"></script>
+  <link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/style.css" />
+  <link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/table.css" />
+  <link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/span.css" />
 </head>
+
 <body>
 
 
-<div class='block' >
-{% for group in refs.values()|rejectattr("year", "undefined")|groupby(attribute='year')|reverse %}
+  <div class='block'>
+    {% for group in refs.values()|rejectattr("year", "undefined")|groupby(attribute='year')|reverse %}
     <h2>{{ group.grouper }}</h2>
     {% for item in group.list %}
-        <div class='paperblock' >
-	  {% if 'tablewidth' in request.args: %}
-        <table width={{ request.args['tablewidth'] }}>
-	  {% else %}
-        <table width=100%>
-	  {% endif %}
-	  {% if 'teasercolwidth' in request.args: %}
-        <td width={{ request.args['teasercolwidth']}}>
-	  {% else %}
-        <td width=150px>
-	  {% endif %}
-        {% if item.teaser %}
-          {% if 'teaserwidth' in request.args: %}
-                <img width={{ request.args['teaserwidth'] }} class=teaserimg src="/teaser/{{ item.id }}">
-          {% else %}
-                <img width=90% class=teaserimg src="/teaser/{{ item.id }}">
-          {% endif %}
-        {% endif %}
-        </td>
-     
-        <td style='vertical-align:middle'>
-        {% if item.type=='inproceedings' %}
- 	      <span class=bibtitle>
-          {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
-          <br />
-          <span class=bibauthor>{{ item.author }}.</span>
-          <br />
-          <span class=bibvenue>{{ item.booktitle }}.</span>
-          {% if item.pages %}
-          <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
-          {% endif %}
-          <span class=bibyear>{{ item.year }}.</span>
-        {% elif item.type=='article' %}
-          <span class=bibtitle>
-          {% if item.pdf %}<a href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
-          <br />
-          <span class=bibauthor>{{ item.author }}.</span>
-          <br />
-          <span class=bibvenue>{{ item.journal }}.</span>
-          {% if item.volume and item.number %}
-          <span class=bibpages>{{ item.volume }}({{ item.number }}):</span>
-          {% endif %}
-          {% if item.pages %}
-          <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
-          {% endif %}
-          <span class=bibyear>{{ item.year }}.</span>
+    <div class='paperblock'>
+      {% if 'tablewidth' in request.args: %}
+      <table width={{ request.args['tablewidth'] }}>
         {% else %}
-          <span class=bibtitle>{{ item.title }}</span> 
-          <span class=bibauthor>{{ item.author }}.</span>
-          (<span class=bibyear>{{ item.year }}</span>)
-        {% endif %}
-	{% if 'ward' in item.note %}
-		<span class=awardnote> {{ item.note }}</span>
-	{% else %}	
-		{% if item.note %}
-		<span class=note> {{ item.note }}</span>
-		{% endif %}
-	{% endif %}
-        <a href="/bib/{{ item.id }}" onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
-        {% if item.pdf %}
-        <a href="/pdf/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf" title="pdf"/></a>
-        {% endif %}
-        {% if item.url %}
-        <a href="{{ item.url }}"><img src="{{ url_for('static', filename='web-link.png') }}" alt="www" title="www" target="_blank"/></a>
-        {% endif %}
-        {% if item.code %}
-        <a href="{{ item.code }}"><img src="{{ url_for('static', filename='code-link.png') }}" alt="code" title="code" target="_blank"/></a>
-        {% endif %}
-        {% if item.presentation %}
-        <a href="/presentation/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='presentation.png') }}" alt="presentation" title="presentation" target="_blank"/></a>
-        {% endif %}
-        {% if item.supplementary %}
-        <a href="/supplementary/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='supplementary.png') }}" alt="supplementary" title="supplementary" target="_blank"/></a>
-        {% endif %}
-
-
-        {% if item.abstract %}
-        <span class="abstractlink" onClick="abstractclick('{{ item.id }}');">more ...</span>
-        <div class="bibabstract" id="{{ item.id }}">
-          <br />
-          <div class='vspace'></div>
-          Abstract: {{ item.abstract }}
+        <table width=100%>
           {% endif %}
-        </div>
-        </td>
+          {% if 'teasercolwidth' in request.args: %}
+          <td width={{ request.args['teasercolwidth']}}>
+            {% else %}
+          <td width=150px>
+            {% endif %}
+            {% if item.teaser %}
+            {% if 'teaserwidth' in request.args: %}
+            <img width={{ request.args['teaserwidth'] }} class=teaserimg src="/teaser/{{ item.id }}">
+            {% else %}
+            <img width=90% class=teaserimg src="/teaser/{{ item.id }}">
+            {% endif %}
+            {% endif %}
+          </td>
+
+          <td style='vertical-align:middle'>
+            {% if item.type=='inproceedings' %}
+            <span class=bibtitle>
+              {% if item.pdf %}<a
+                href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+            <br />
+            <span class=bibauthor>{{ item.author }}.</span>
+            <br />
+            <span class=bibvenue>{{ item.booktitle }}.</span>
+            {% if item.pages %}
+            <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
+            {% endif %}
+            <span class=bibyear>{{ item.year }}.</span>
+            {% elif item.type=='article' %}
+            <span class=bibtitle>
+              {% if item.pdf %}<a
+                href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+            <br />
+            <span class=bibauthor>{{ item.author }}.</span>
+            <br />
+            <span class=bibvenue>{{ item.journal }}.</span>
+            {% if item.volume and item.number %}
+            <span class=bibpages>{{ item.volume }}({{ item.number }}):</span>
+            {% endif %}
+            {% if item.pages %}
+            <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
+            {% endif %}
+            <span class=bibyear>{{ item.year }}.</span>
+            {% else %}
+            <span class=bibtitle>{{ item.title }}</span>
+            <span class=bibauthor>{{ item.author }}.</span>
+            (<span class=bibyear>{{ item.year }}</span>)
+            {% endif %}
+            {% if 'ward' in item.note %}
+            <span class=awardnote> {{ item.note }}</span>
+            {% else %}
+            {% if item.note %}
+            <span class=note> {{ item.note }}</span>
+            {% endif %}
+            {% endif %}
+            <a href="/bib/{{ item.id }}"
+              onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img
+                src="{{ url_for('static', path='get-bib-source.png' ) }}" alt="BibTeX" /></a>
+            {% if item.pdf %}
+            <a href="/pdf/{{ item.id }}.pdf"><img src="{{ url_for('static', path='pdf-document.png') }}" alt="pdf"
+                title="pdf" /></a>
+            {% endif %}
+            {% if item.url %}
+            <a href="{{ item.url }}"><img src="{{ url_for('static', path='web-link.png') }}" alt="www" title="www"
+                target="_blank" /></a>
+            {% endif %}
+            {% if item.code %}
+            <a href="{{ item.code }}"><img src="{{ url_for('static', path='code-link.png') }}" alt="code" title="code"
+                target="_blank" /></a>
+            {% endif %}
+            {% if item.presentation %}
+            <a href="/presentation/{{ item.id }}.pdf"><img src="{{ url_for('static', path='presentation.png') }}"
+                alt="presentation" title="presentation" target="_blank" /></a>
+            {% endif %}
+            {% if item.supplementary %}
+            <a href="/supplementary/{{ item.id }}.pdf"><img src="{{ url_for('static', path='supplementary.png') }}"
+                alt="supplementary" title="supplementary" target="_blank" /></a>
+            {% endif %}
+
+
+            {% if item.abstract %}
+            <span class="abstractlink" onClick="abstractclick('{{ item.id }}');">more ...</span>
+            <div class="bibabstract" id="{{ item.id }}">
+              <br />
+              <div class='vspace'></div>
+              Abstract: {{ item.abstract }}
+              {% endif %}
+            </div>
+          </td>
         </table>
 
-        </div>
-        <div class='vspace'></div>
+    </div>
+    <div class='vspace'></div>
     {% endfor %}
-{% endfor %}
-</div>
+    {% endfor %}
+  </div>
 
 </body>
 
