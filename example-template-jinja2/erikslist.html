@@ -50,14 +50,16 @@
             <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
             {% endif %}
             <span class=bibyear>{{ item.year }}.</span>
-            {% elif item.type=='article' %}
+            {% else %}
             <span class=bibtitle>
               {% if item.pdf %}<a
                 href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
             <br />
             <span class=bibauthor>{{ item.author }}.</span>
             <br />
+            {% if item.journal %}
             <span class=bibvenue>{{ item.journal }}.</span>
+            {% endif %}
             {% if item.volume and item.number %}
             <span class=bibpages>{{ item.volume }}({{ item.number }}):</span>
             {% endif %}
@@ -65,10 +67,6 @@
             <span class=bibpages>{{ item.pages|replace("--","-") }}.</span>
             {% endif %}
             <span class=bibyear>{{ item.year }}.</span>
-            {% else %}
-            <span class=bibtitle>{{ item.title }}</span>
-            <span class=bibauthor>{{ item.author }}.</span>
-            (<span class=bibyear>{{ item.year }}</span>)
             {% endif %}
             {% if 'ward' in item.note %}
             <span class=awardnote> {{ item.note }}</span>
