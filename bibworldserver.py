@@ -13,12 +13,13 @@ from starlette.responses import FileResponse
 from bibdb import bibdb
 
 homepath = expanduser("~")
+apppath = os.path.basename(os.path.dirname(__file__))
 
 mybib = None
 
-htmlroot = "example-template-jinja2"
-bibfile = pjoin(homepath, "publications", "paper.bib")
-pdfdir = pjoin(homepath, "publications-pdfs")
+htmlroot = pjoin(apppath, "example-template-jinja2")
+bibfile = pjoin("/", "publications", "paper.bib")
+pdfdir = pjoin("/", "publications-pdfs")
 defaulttemplate = "erikslist.html"
 
 # fixed settings
