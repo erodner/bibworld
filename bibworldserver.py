@@ -10,7 +10,8 @@ from fastapi.templating import Jinja2Templates
 from typing import Optional
 from starlette.responses import FileResponse
 
-from bibdb import bibdb
+from bibworld.bibdb import bibdb
+from bibworld import tengjinja2
 
 homepath = expanduser("~")
 
@@ -60,20 +61,6 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory=htmlroot), name="static")
 templates = Jinja2Templates(directory=htmlroot)
-
-#
-# Helper functions
-#
-# def webserver_send_file(fn, mimetype):
-#    # http://stackoverflow.com/questions/5410255/preferred-method-for-downloading-a-file-generated-on-the-fly-in-flask
-#    basefn = fn.replace(pdfdir, "/staticfiles/")
-#    response = make_response()
-#    response.headers["Cache-Control"] = "no-cache"
-#    response.headers["Content-Type"] = mimetype
-#    response.headers["X-Accel-Redirect"] = basefn
-#    print("Sending file {} as {} with X-Accel-Direct".format(fn, basefn))
-#    return response
-
 
 #
 # API Definition

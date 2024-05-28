@@ -1,11 +1,12 @@
 import sys
 import os
 import argparse
-from bibdb import bibdb
 from pprint import pprint
-import tengjinja2
 import re
 import json
+
+from bibworld.bibdb import bibdb
+from bibworld import tengjinja2
 
 # Get the BibTeX and template file names
 parser = argparse.ArgumentParser()
