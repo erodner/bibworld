@@ -30,5 +30,5 @@ def bib2html(refs, outfn, templatedir, templatename, staticroot="", rooturl=""):
         templatename = "{}.html".format(templatename)
     template = env.get_template(templatename)
     rtext = template.render(refs=refs, rooturl=rooturl)
-    with open(outfn, "w") as outf:
+    with open(outfn, "wb") as outf:
         outf.write(rtext.encode("utf8"))
