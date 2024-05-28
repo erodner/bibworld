@@ -3,7 +3,6 @@ import os
 import argparse
 from bibdb import bibdb
 from pprint import pprint
-import tengjabref
 import tengjinja2
 import re
 import json
@@ -15,7 +14,6 @@ parser.add_argument("-t", help="Template file", required=True)
 parser.add_argument("-o", help="Output", default="out.html")
 parser.add_argument("-p", help="PDF and teaser directory", default=".")
 parser.add_argument("-r", help="Root URL", default="")
-parser.add_argument("--engine", help="Template engine being used", default="jinja")
 parser.add_argument("--query", help="Query in JSON format", default=None)
 parser.add_argument(
     "--staticroot",
@@ -56,14 +54,11 @@ refs = mybib.getReferences(**jsonquery)
 print("Number of publications: {}".format(len(refs)))
 
 print("Writing output to {}".format(outfn))
-if args.engine == "jabref":
-    tengjabref.bib2html(refs, outfn, templatedir, templatename)
-else:
-    tengjinja2.bib2html(
-        refs,
-        outfn,
-        templatedir,
-        templatename,
-        staticroot=args.staticroot,
-        rooturl=args.r,
-    )
+tengjinja2.bib2html(
+    refs,
+    outfn,
+    templatedir,
+    templatename,
+    staticroot=args.staticroot,
+    rooturl=args.r,
+)
