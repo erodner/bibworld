@@ -3,8 +3,8 @@
 
 <head>
   <title>Publications</title>
-  <link href="{{ url_for('static', path='bib_eriks.css') }}" rel="stylesheet" type="text/css">
-  <script src="{{ url_for('static', path='bib.js') }}"></script>
+  <link href="{{ url_for('static', filename='bib_eriks.css') }}" rel="stylesheet" type="text/css">
+  <script src="{{ url_for('static', filename='bib.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/style.css" />
   <link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/table.css" />
   <link rel="stylesheet" type="text/css" href="https://cms.rz.uni-jena.de/skin/dbv/span.css" />
@@ -77,25 +77,25 @@
             {% endif %}
             <a href="/bib/{{ item.id }}"
               onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img
-                src="{{ url_for('static', path='get-bib-source.png' ) }}" alt="BibTeX" /></a>
+                src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
             {% if item.pdf %}
-            <a href="/pdf/{{ item.id }}.pdf"><img src="{{ url_for('static', path='pdf-document.png') }}" alt="pdf"
+            <a href="/pdf/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf"
                 title="pdf" /></a>
             {% endif %}
             {% if item.url %}
-            <a href="{{ item.url }}"><img src="{{ url_for('static', path='web-link.png') }}" alt="www" title="www"
+            <a href="{{ item.url }}"><img src="{{ url_for('static', filename='web-link.png') }}" alt="www" title="www"
                 target="_blank" /></a>
             {% endif %}
             {% if item.code %}
-            <a href="{{ item.code }}"><img src="{{ url_for('static', path='code-link.png') }}" alt="code" title="code"
+            <a href="{{ item.code }}"><img src="{{ url_for('static', filename='code-link.png') }}" alt="code" title="code"
                 target="_blank" /></a>
             {% endif %}
             {% if item.presentation %}
-            <a href="/presentation/{{ item.id }}.pdf"><img src="{{ url_for('static', path='presentation.png') }}"
+            <a href="/presentation/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='presentation.png') }}"
                 alt="presentation" title="presentation" target="_blank" /></a>
             {% endif %}
             {% if item.supplementary %}
-            <a href="/supplementary/{{ item.id }}.pdf"><img src="{{ url_for('static', path='supplementary.png') }}"
+            <a href="/supplementary/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='supplementary.png') }}"
                 alt="supplementary" title="supplementary" target="_blank" /></a>
             {% endif %}
 
