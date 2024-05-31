@@ -35,14 +35,10 @@ mybib = bibdb()
 mybib.readFromBibTex(bibfile)
 
 pdfdir = args.p
-mybib.addAuxFiles(os.path.join(pdfdir, "%s.pdf"), "pdf")
-# compatibility for the old format
-mybib.addAuxFiles(os.path.join(pdfdir, "%s.pdf.teaser.png"), "teaser")
-mybib.addAuxFiles(
-    os.path.join(pdfdir, "%s.teaser.png"), "teaser", removeIfUnavailable=False
-)
-mybib.addAuxFiles(os.path.join(pdfdir, "%s.presentation.pdf"), "presentation")
-mybib.addAuxFiles(os.path.join(pdfdir, "%s.supplementary.pdf"), "supplementary")
+mybib.addAuxFiles(os.path.join(pdfdir, "pdf", "%s.pdf"), "pdf")
+mybib.addAuxFiles(os.path.join(pdfdir, "teaser", "%s.teaser.png"), "teaser")
+mybib.addAuxFiles(os.path.join(pdfdir, "presentation", "%s.presentation.pdf"), "presentation")
+mybib.addAuxFiles(os.path.join(pdfdir, "supplementary", "%s.supplementary.pdf"), "supplementary")
 
 
 if args.query is None:
