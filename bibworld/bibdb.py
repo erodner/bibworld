@@ -2,6 +2,7 @@
 import re
 import os
 import json
+import shutil
 
 
 class bibdb:
@@ -85,6 +86,8 @@ class bibdb:
             if os.path.isfile(fname):
                 if verbose:
                     print("Adding {} document: {}".format(tag, fname))
+                    # evil hack - for one-time filtering
+                    #shutil.copyfile(fname, os.path.join("/Users/rodner/dev/webpage/", tag, os.path.basename(fname)))
                 self.reflist[k][tag] = fname
             else:
                 # if verbose:

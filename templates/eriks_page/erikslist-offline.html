@@ -29,7 +29,7 @@
             {% if 'teaserwidth' in request.args: %}
             <img width={{ request.args['teaserwidth'] }} class=teaserimg src="/teaser/{{ item.id }}">
             {% else %}
-            <img width=90% class=teaserimg src="/teaser/{{ item.id }}">
+            <img width=90% class=teaserimg src="{{ rooturl }}/teaser/{{ item.id }}.pdf.teaser.png">
             {% endif %}
             {% endif %}
           </td>
@@ -38,7 +38,7 @@
             {% if item.type=='inproceedings' %}
             <span class=bibtitle>
               {% if item.pdf %}<a
-                href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+                href="{{ rooturl }}/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
             <br />
             <span class=bibauthor>{{ item.author }}.</span>
             <br />
@@ -50,7 +50,7 @@
             {% else %}
             <span class=bibtitle>
               {% if item.pdf %}<a
-                href="/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+                href="{{ rooturl }}/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
             <br />
             <span class=bibauthor>{{ item.author }}.</span>
             <br />
@@ -76,7 +76,7 @@
               onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img
                 src="{{ url_for('static', filename='get-bib-source.png' ) }}" alt="BibTeX" /></a>
             {% if item.pdf %}
-            <a href="/pdf/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf"
+            <a href="{{ rooturl }}/pdf/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='pdf-document.png') }}" alt="pdf"
                 title="pdf" /></a>
             {% endif %}
             {% if item.url %}
@@ -88,11 +88,11 @@
                 target="_blank" /></a>
             {% endif %}
             {% if item.presentation %}
-            <a href="/presentation/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='presentation.png') }}"
+            <a href="{{ rooturl }}/presentation/{{ item.id }}.presentation.pdf"><img src="{{ url_for('static', filename='presentation.png') }}"
                 alt="presentation" title="presentation" target="_blank" /></a>
             {% endif %}
             {% if item.supplementary %}
-            <a href="/supplementary/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='supplementary.png') }}"
+            <a href="{{ rooturl }}/supplementary/{{ item.id }}.supplementary.pdf"><img src="{{ url_for('static', filename='supplementary.png') }}"
                 alt="supplementary" title="supplementary" target="_blank" /></a>
             {% endif %}
 
