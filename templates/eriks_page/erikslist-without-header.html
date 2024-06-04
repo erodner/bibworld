@@ -2,6 +2,18 @@
   {% for group in refs.values()|rejectattr("year", "undefined")|groupby(attribute='year')|reverse %}
   <h2>{{ group.grouper }}</h2>
   {% for item in group.list %}
+  {% if item.pdf %}
+  {% set pdflink = rooturl + '/pdf/' + item.id + '.pdf' %}
+  {% elif item.extpdf %}
+  {% set pdflink = item.extpdf %}
+  {% elif item.url %}
+  {% set pdflink = item.url %}
+  {% elif item.doi %}
+  {% set pdflink = 'https://doi.org/' + item.doi %}
+  {% else %}
+  {% set pdflink = none %}
+  {% endif %}
+
   <div class='paperblock'>
     <table>
       {% if 'teasercolwidth' in request.args: %}
@@ -20,8 +32,7 @@
       <td style='vertical-align:middle'>
         {% if item.type=='inproceedings' %}
         <span class=bibtitle>
-          {% if item.pdf %}<a
-            href="{{ rooturl }}/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          {% if pdflink %}<a href="{{ pdflink }}">{% endif %}{{ item.title }}{% if pdflink %}</a>{% endif %}.</span>
         <br />
         <span class=bibauthor>{{ item.author }}.</span>
         <br />
@@ -32,8 +43,7 @@
         <span class=bibyear>{{ item.year }}.</span>
         {% elif item.type=='article' %}
         <span class=bibtitle>
-          {% if item.pdf %}<a
-            href="{{ rooturl }}/pdf/{{ item.id }}.pdf">{% endif %}{{ item.title }}{% if item.pdf %}</a>{% endif %}.</span>
+          {% if pdflink %}<a href="{{ pdflink }}">{% endif %}{{ item.title }}{% if pdflink %}</a>{% endif %}.</span>
         <br />
         <span class=bibauthor>{{ item.author }}.</span>
         <br />
@@ -57,11 +67,8 @@
         <span class=note> {{ item.note }}</span>
         {% endif %}
         {% endif %}
-        <a href="{{ rooturl }}/bib/{{ item.id }}"
-          onlick="window.open(this.href,'bibtex','toolbar=no,menubar=no,status=no,height=400,width=600,resizable=yes'); return false;"><img
-            src="{{ url_for('static', filename='img/get-bib-source.png' ) }}" alt="BibTeX" /></a>
-        {% if item.pdf %}
-        <a href="{{ rooturl }}/pdf/{{ item.id }}.pdf"><img src="{{ url_for('static', filename='img/pdf-document.png') }}"
+        {% if pdflink %}
+        <a href="{{ pdflink }}"><img src="{{ url_for('static', filename='img/pdf-document.png') }}"
             alt="pdf" title="pdf" /></a>
         {% endif %}
         {% if item.url %}
@@ -90,7 +97,8 @@
             Abstract: {{ item.abstract }}
           </div>
         {% endif %}
-        <span class="bibtexlink" onClick="fieldclick('{{ item.id }}bibtex');">bibtex</span>
+        <span class="bibtexlink" onClick="fieldclick('{{ item.id }}bibtex');"><img
+          src="{{ url_for('static', filename='img/get-bib-source.png' ) }}" alt="BibTeX"></span>
         <div class="bibbibtex" id="{{ item.id }}bibtex">{{ item.bibtex }}</div>
       </td>
     </table>
