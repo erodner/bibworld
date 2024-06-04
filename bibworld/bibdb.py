@@ -8,6 +8,19 @@ import shutil
 class bibdb:
 
     reflist = {}
+        
+    # bibtex keys that will be exported and provided in the downloaded bibtex keys
+    default_exported_bibkeys = {
+        "title",
+        "author",
+        "booktitle",
+        "pages",
+        "journal",
+        "year",
+        "volume",
+        "number",
+        "doi",
+    }
 
     def __init__(self, origdb=None):
         if not origdb is None:
@@ -65,6 +78,7 @@ class bibdb:
             if self.matchEntry(kwargs, p):
                 # add the entry to the filter result list
                 refs[k] = p
+                refs[k]["bibtex"] = self.getBibtexEntry(k, exported_keys=self.default_exported_bibkeys)
 
         return refs
 
@@ -76,6 +90,7 @@ class bibdb:
             if self.matchEntryAllKeys(term, p):
                 # add the entry to the filter result list
                 refs[k] = p
+                refs[k]["bibtex"] = self.getBibtexEntry(k, exported_keys=self.default_exported_bibkeys)
 
         return refs
 
