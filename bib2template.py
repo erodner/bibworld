@@ -26,6 +26,10 @@ args = parser.parse_args()
 bibfile = args.b
 templatefile = args.t
 outfn = args.o
+rooturl = args.r
+if rooturl != "":
+    if not rooturl.endswith("/"): 
+        rooturl = rooturl + "/"
 
 # derive template directory from templatefile
 templatedir = os.path.dirname(templatefile)
