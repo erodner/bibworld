@@ -22,6 +22,17 @@ class bibdb:
         "doi",
     }
 
+    # bibtex keys with free text where LaTeX dashes and quotes are converted
+    typography_bibkeys = {"title", "booktitle", "journal", "note", "abstract"}
+
+    @staticmethod
+    def latexTypography(s):
+        """ convert LaTeX dashes and quotes to unicode characters """
+        s = s.replace("---", "—").replace("--", "–")
+        s = s.replace("``", "“").replace("''", "”")
+        s = s.replace("`", "‘")
+        return s
+
     def __init__(self, origdb=None):
         if not origdb is None:
             self.reflist = dict(origdb.getReferences())
@@ -221,6 +232,8 @@ class bibdb:
                     key = key.strip(" ,\n\t{}")
                     key = key.lower()
                     value = value.strip(" ,\n\t{}")
+                    if not use_raw_encoding and key in self.typography_bibkeys:
+                        value = self.latexTypography(value)
                     keydict[key] = value
 
                 if "id" in keydict:
